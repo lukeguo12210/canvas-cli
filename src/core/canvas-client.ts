@@ -66,6 +66,11 @@ export class CanvasClient {
           Authorization: `Bearer ${this.token}`,
           Accept: "application/json+canvas-string-ids"
         }
+      }).catch((error: unknown) => {
+        throw new CanvasCliError("CANVAS_NETWORK_ERROR", "Could not reach Canvas.", {
+          retryable: true,
+          cause: error
+        });
       });
 
       if (!response.ok) {

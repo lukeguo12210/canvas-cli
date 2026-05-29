@@ -79,4 +79,19 @@ describe("CanvasClient", () => {
     expect(response.data).toEqual([{ id: "1" }, { id: "2" }]);
     expect(response.meta.pagination.pagesFetched).toBe(2);
   });
+
+  it("maps fetch failures to Canvas network errors", async () => {
+    const client = new CanvasClient({
+      baseUrl: "https://canvas.example.edu",
+      token: "secret-token",
+      fetchImpl: async () => {
+        throw new TypeError("fetch failed");
+      }
+    });
+
+    await expect(client.get("/api/v1/courses")).rejects.toMatchObject({
+      code: "CANVAS_NETWORK_ERROR",
+      retryable: true
+    });
+  });
 });

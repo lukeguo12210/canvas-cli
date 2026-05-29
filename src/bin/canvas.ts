@@ -2,7 +2,9 @@ import { writeOutput } from "../core/output.js";
 import type { OutputFormat } from "../core/output.js";
 import { handleAuthCommand } from "../commands/auth.js";
 import { handleConfigCommand } from "../commands/config.js";
+import { handleCoursesCommand } from "../commands/courses.js";
 import { handleMeCommand } from "../commands/me.js";
+import { handleTabsCommand } from "../commands/tabs.js";
 
 const VERSION = "0.0.0";
 
@@ -28,7 +30,7 @@ FLAGS:
   --format <fmt>    Output format: json | pretty | table | ndjson
 
 MVP STATUS:
-  Auth/config/me are in progress. Course and review commands are planned next.
+  Auth/config/me/courses/tabs are in progress. Review commands are planned next.
 `;
 }
 
@@ -63,6 +65,14 @@ async function main(argv: string[]): Promise<number> {
 
   if (command === "me") {
     return handleMeCommand({ format: parsed.format });
+  }
+
+  if (command === "courses") {
+    return handleCoursesCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "tabs") {
+    return handleTabsCommand(parsed.argv.slice(1), { format: parsed.format });
   }
 
   await writeOutput(

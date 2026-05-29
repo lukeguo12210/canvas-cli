@@ -1,5 +1,6 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { CanvasCliError } from "./errors.js";
 import { configPath } from "./paths.js";
 import { redactSecrets } from "./redaction.js";
 
@@ -56,12 +57,15 @@ export class ConfigStore {
   async activeProfile(): Promise<CanvasProfile> {
     const config = await this.read();
     if (!config) {
-      throw new Error("No Canvas auth config found. Run canvas auth login.");
+      throw new CanvasCliError("NO_AUTH_CONFIG", "No Canvas auth config found. Run canvas auth login.");
     }
 
     const profile = config.profiles[config.activeProfile];
     if (!profile) {
-      throw new Error(`Active Canvas profile not found: ${config.activeProfile}`);
+      throw new CanvasCliError(
+        "NO_ACTIVE_PROFILE",
+        `Active Canvas profile not found: ${config.activeProfile}`
+      );
     }
 
     return profile;
