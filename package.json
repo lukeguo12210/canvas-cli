@@ -1,7 +1,7 @@
 {
   "name": "@lukeguo12210/canvas-cli",
-  "version": "0.0.2",
-  "description": "Canvas LMS CLI and AI agent skills bundle for technical students.",
+  "version": "0.0.3",
+  "description": "Connect Canvas courses to AI agents: pull modules, files, assignments, pages, folders, and review packs without manual downloads.",
   "type": "module",
   "bin": {
     "canvas": "dist/bin/canvas.js"
@@ -28,9 +28,12 @@
     "canvas-lms",
     "cli",
     "agents",
+    "ai-agents",
     "skills",
     "students",
-    "education"
+    "education",
+    "study",
+    "coursework"
   ],
   "repository": {
     "type": "git",

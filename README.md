@@ -2,36 +2,36 @@
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-yellow.svg)](LICENSE)
 
-Canvas CLI for technical students and AI agents.
+Connect Canvas courses to AI agents.
 
-`@lukeguo12210/canvas-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
+`@lukeguo12210/canvas-cli` turns Canvas LMS into an agent-readable course workspace. Today, students dig through Canvas, download slides, find assignments, copy pages, and upload everything back into LLMs. Canvas CLI makes that one workflow: pull course materials, modules, files, assignments, pages, folders, and review packs into a structure AI agents can immediately understand.
 
 [Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [License](#license) · [Roadmap](#roadmap)
 
 ## Why @lukeguo12210/canvas-cli?
 
-- **Built for technical students** — bring Canvas into your terminal, scripts, and local AI workflow.
+- **Built for technical students** — bring Canvas into your terminal, scripts, and AI workflow.
 - **Agent-native design** — structured skills teach agents Canvas auth, pagination, course structure, and study workflows.
-- **Course context in minutes** — after login, the CLI gathers who you are, what courses you are taking, and where you are in the semester.
-- **Review-pack first** — export modules, pages, assignments, files, discussions, announcements, and calendar context into a structured local course folder.
+- **No more manual Canvas digging** — pull slides, files, pages, assignments, folders, and module structure without download/upload loops.
+- **Review-pack first** — export course structure into an agent-readable folder for study sessions.
 - **Canvas-native commands** — simple commands such as `canvas courses list`, `canvas modules list`, and `canvas review pack`.
-- **Local-first control** — personal access tokens stay local, and course exports are written to directories you choose.
+- **Student-facing scope** — starts with the read-only course surface students need for review, planning, and coursework navigation.
 
 ## Features
 
 | Category | Capabilities |
 | --- | --- |
 | Auth | Interactive `canvas auth login`, school picker, Canvas settings walkthrough, local PAT config |
-| Context | Post-login context bootstrap: user profile, active courses, planner, calendar, upcoming assignments, modules |
 | Courses | List, search, inspect, and summarize active courses |
+| Tabs | Inspect visible Canvas course tabs and external tool links |
 | Modules | Traverse modules and module items in Canvas order |
-| Pages | Fetch pages and export Canvas HTML to Markdown |
+| Pages | List pages, inspect Canvas HTML, and export visible pages |
 | Files | List files/folders and download accessible course files safely |
-| Assignments | List assignments, due dates, descriptions, visible attachments, and assignment groups |
-| Calendar | Pull calendar, planner, and todo context for the semester |
-| Discussions | Inspect discussion prompts and announcements where visible |
-| Review Packs | Preserve Canvas course structure in an agent-readable local export |
-| Agent Skills | Lark-style skills for Codex, Claude Code, and other local agents |
+| Folders | Browse Canvas folder trees and folder paths |
+| Assignments | List assignments, due dates, descriptions, visible attachments, and exports |
+| Raw API | Run read-only `GET` requests against Canvas API paths |
+| Review Packs | Preserve Canvas course structure in an agent-readable export |
+| Agent Skills | Skills that teach agents exact commands, output shapes, and Canvas workflows |
 
 ## Status
 
@@ -52,7 +52,7 @@ Planned next:
 
 - Post-login context bootstrap.
 - Broader review-pack indexing, citations, and linked-file resolution.
-- Grades, submissions, discussions, announcements, calendar, groups, and conversations.
+- Grades, submissions, discussions, announcements, calendar, groups, conversations, and richer review indexing.
 
 ## Installation & Quick Start
 
@@ -133,24 +133,45 @@ canvas review pack --course-id <course-id> --out ./review/<course>
 canvas review pack --course-id <course-id> --out ./review/<course> --include-all-files
 ```
 
-### Domain Commands
+### Full Command Surface
 
 ```bash
+canvas auth login
+canvas auth status
+canvas auth logout
+canvas config show
+canvas me
+
 canvas courses list
 canvas courses search "algorithms"
+canvas courses show <course-id>
+canvas courses overview <course-id>
+canvas tabs list --course-id <course-id>
+
 canvas modules list --course-id <course-id>
 canvas modules items --course-id <course-id> --module-id <module-id>
+canvas modules item --course-id <course-id> --module-id <module-id> --item-id <item-id>
+canvas modules export --course-id <course-id> --module-id <module-id> --out ./module
+
 canvas assignments list --course-id <course-id>
+canvas assignments show --course-id <course-id> --assignment-id <assignment-id>
+canvas assignments export --course-id <course-id> --assignment-id <assignment-id> --out ./assignment
+
 canvas pages list --course-id <course-id>
 canvas pages show --course-id <course-id> --page <url-or-id>
+canvas pages export --course-id <course-id> --page <url-or-id> --out ./page
+
 canvas files list --course-id <course-id>
+canvas files show <file-id>
 canvas files download <file-id> --out ./files
+canvas files download-linked --course-id <course-id> --out ./files
+
 canvas folders list --course-id <course-id>
-```
+canvas folders path --course-id <course-id> --path "course files/week 1"
 
-### Raw Read-Only API
+canvas review pack --course-id <course-id> --out ./review/<course>
+canvas review pack --course-id <course-id> --out ./review/<course> --include-all-files
 
-```bash
 canvas api get /api/v1/courses
 canvas api get /api/v1/courses/<course-id>/modules --params '{"include":["items"]}'
 ```
