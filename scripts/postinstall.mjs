@@ -3,7 +3,7 @@ Canvas CLI installed.
 
 To enable agent skills, run:
 
-  npx skills add @lukeguo12210/canvas-cli -g -y
+  npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 
 Then authenticate:
 

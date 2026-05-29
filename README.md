@@ -87,7 +87,7 @@ canvas review pack --course-id <course-id> --out ./review/<course>
 ### Install Agent Skills
 
 ```bash
-npx skills add @lukeguo12210/canvas-cli -g -y
+npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 ```
 
 ## Agent Skills
@@ -192,7 +192,7 @@ Near term:
 - Add post-login context bootstrap.
 - Implement courses, tabs, modules, assignments, pages, and files.
 - Build `canvas review pack`.
-- Package skills for `npx skills add @lukeguo12210/canvas-cli -g -y`.
+- Package skills for `npx skills add lukeguo12210/canvas-cli -g --skill "*" -y`.
 
 Later:
 

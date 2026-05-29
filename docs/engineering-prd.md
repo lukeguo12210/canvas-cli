@@ -917,7 +917,7 @@ Preferred public install:
 
 ```bash
 npm install -g @lukeguo12210/canvas-cli
-npx skills add @lukeguo12210/canvas-cli -g -y
+npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 ```
 
 CLI-assisted install can also be supported:
@@ -926,7 +926,7 @@ CLI-assisted install can also be supported:
 canvas skills install
 ```
 
-`npx skills add @lukeguo12210/canvas-cli -g -y` is the canonical package-based path. `canvas skills install` is a convenience wrapper and fallback for environments where the skills CLI is unavailable.
+`npx skills add lukeguo12210/canvas-cli -g --skill "*" -y` is the canonical GitHub-source path for skills. `canvas skills install` is a convenience wrapper and fallback for environments where the skills CLI is unavailable.
 
 `canvas skills install` should detect likely agent skill folders and copy bundled skills:
 
@@ -1336,7 +1336,7 @@ Against a real Canvas sandbox or developer account:
 
 - Confirm all feature skills match implemented commands.
 - `canvas skills install`.
-- `npx skills add @lukeguo12210/canvas-cli -g -y`.
+- `npx skills add lukeguo12210/canvas-cli -g --skill "*" -y`.
 - Agent verification examples.
 
 ### M6: Polish
@@ -1366,7 +1366,7 @@ MVP is acceptable when:
 These should be resolved during implementation, not block the PRD:
 
 - Confirm npm scoped package publishing and access settings for `@lukeguo12210/canvas-cli`.
-- Confirm exact skills registry/package metadata required for `npx skills add @lukeguo12210/canvas-cli -g -y`.
+- Confirm exact skills registry/package metadata required for `npx skills add lukeguo12210/canvas-cli -g --skill "*" -y`.
 - Confirm best local config path on Windows.
 - Confirm whether Canvas conversation `auto_mark_as_read=false` fully prevents read-state mutation across institutions.
 - Confirm the most reliable endpoint for "my groups" across Canvas versions; use course-scoped groups with `only_own_groups=true` as the conservative fallback.

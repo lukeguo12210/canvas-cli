@@ -727,7 +727,7 @@ Build steps:
 4. Support canonical skill install:
 
 ```bash
-npx skills add @lukeguo12210/canvas-cli -g -y
+npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 ```
 
 5. Optional fallback:
@@ -755,7 +755,7 @@ canvas auth login
 canvas context show
 canvas courses list
 canvas review pack --course-id <id> --out ./review/<course>
-npx skills add @lukeguo12210/canvas-cli -g -y
+npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 ```
 
 12. Add CI:
