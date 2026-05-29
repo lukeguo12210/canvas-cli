@@ -1,7 +1,7 @@
 {
   "name": "canvas-cli",
   "version": "0.0.0",
-  "description": "Agent-native Canvas LMS CLI and skills bundle for students.",
+  "description": "Canvas CLI and AI agent skills bundle for technical students.",
   "type": "module",
   "bin": {
     "canvas": "dist/bin/canvas.js"
@@ -26,7 +26,9 @@
     "canvas-lms",
     "cli",
     "agents",
-    "skills"
+    "skills",
+    "students",
+    "education"
   ],
   "license": "MIT",
   "devDependencies": {

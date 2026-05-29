@@ -1,10 +1,39 @@
 # canvas-cli
 
-Agent-native Canvas LMS CLI and skills bundle for students.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The package/project is `canvas-cli`. The installed command is `canvas`.
+Canvas CLI for technical students and AI agents.
 
-`canvas-cli` follows the same bundle idea as `larksuite/cli`: a CLI that humans can run directly, plus structured agent skills that teach Codex, Claude Code, and other local agents how to authenticate, understand Canvas resource semantics, and pull course context systematically.
+`canvas-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
+
+Inspired by [`larksuite/cli`](https://github.com/larksuite/cli), this project is designed as a bundle: CLI + agent skills + practical workflows.
+
+[Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [Roadmap](#roadmap)
+
+## Why canvas-cli?
+
+- **Built for technical students** — bring Canvas into your terminal, scripts, and local AI workflow.
+- **Agent-native design** — structured skills teach agents Canvas auth, pagination, course structure, and study workflows.
+- **Course context in minutes** — after login, the CLI gathers who you are, what courses you are taking, and where you are in the semester.
+- **Review-pack first** — export modules, pages, assignments, files, discussions, announcements, and calendar context into a structured local course folder.
+- **Canvas-native commands** — simple commands such as `canvas courses list`, `canvas modules list`, and `canvas review pack`.
+- **Local-first control** — personal access tokens stay local, and course exports are written to directories you choose.
+
+## Features
+
+| Category | Capabilities |
+| --- | --- |
+| Auth | Interactive `canvas auth login`, school picker, Canvas settings walkthrough, local PAT config |
+| Context | Post-login context bootstrap: user profile, active courses, planner, calendar, upcoming assignments, modules |
+| Courses | List, search, inspect, and summarize active courses |
+| Modules | Traverse modules and module items in Canvas order |
+| Pages | Fetch pages and export Canvas HTML to Markdown |
+| Files | List files/folders and download accessible course files safely |
+| Assignments | List assignments, due dates, descriptions, visible attachments, and assignment groups |
+| Calendar | Pull calendar, planner, and todo context for the semester |
+| Discussions | Inspect discussion prompts and announcements where visible |
+| Review Packs | Preserve Canvas course structure in an agent-readable local export |
+| Agent Skills | Lark-style skills for Codex, Claude Code, and other local agents |
 
 ## Status
 
@@ -19,7 +48,7 @@ Implemented:
 - Engineering PRD and executable build plan.
 - Initial Lark-style skill bundle skeleton.
 
-Not implemented yet:
+Planned next:
 
 - `canvas auth login`.
 - Canvas school picker and PAT setup flow.
@@ -27,57 +56,139 @@ Not implemented yet:
 - Course/resource commands.
 - Review packs.
 
-## Product Stance
+## Installation & Quick Start
 
-The MVP is student-only and read-only.
+### Requirements
 
-For now, `canvas-cli` relies only on the student's own Canvas personal access token for local/self use. OAuth can be revisited later if the project needs school-approved multi-user distribution.
+- Node.js 20+
+- npm
+- A Canvas personal access token generated from your own Canvas account
 
-MVP behavior:
-
-- `canvas auth login` will guide the user through school selection and PAT setup.
-- The CLI will pull student-facing Canvas data.
-- The flagship workflow will be `canvas review pack`.
-- Review packs will preserve Canvas course structure with course as the top-level unit.
-- Sensitive read-only data such as grades, submissions, conversations, and group members will require explicit commands or flags.
-- Canvas write workflows are future work and should have dedicated commands and skills.
-
-## Planned Quick Start
+### Install
 
 ```bash
 npm install -g canvas-cli
-canvas auth login
-canvas context show
-canvas courses list
-canvas review pack --course-id <course-id> --out ./review/<course>
-npx skills add canvas-cli -g -y
 ```
 
-## Command Shape
-
-The CLI uses simple Canvas-native commands:
+### Use
 
 ```bash
+# 1. Authenticate with your Canvas school
+canvas auth login
+
+# 2. Inspect the automatically gathered student context
+canvas context show
+
+# 3. List courses
 canvas courses list
-canvas modules list --course-id <course-id>
-canvas assignments list --course-id <course-id>
-canvas files download <file-id> --out ./files
+
+# 4. Build a local review pack
 canvas review pack --course-id <course-id> --out ./review/<course>
-canvas api get /api/v1/courses
+```
+
+### Install Agent Skills
+
+```bash
+npx skills add canvas-cli -g -y
 ```
 
 ## Agent Skills
 
-Initial skills live in [`skills/`](skills/):
+| Skill | Description |
+| --- | --- |
+| `canvas-shared` | Auth, token safety, output formats, pagination, raw API usage, common Canvas errors |
+| `canvas-courses` | Course discovery, course name disambiguation, tabs, and overview |
+| `canvas-modules` | Module traversal, module item resolution, Canvas course order |
+| `canvas-files` | File metadata, folders, linked files, safe downloads |
+| `canvas-assignments` | Assignments, due dates, descriptions, visible attachments |
+| `canvas-review` | Review-pack workflow that preserves Canvas course structure |
 
-- `canvas-shared`
-- `canvas-courses`
-- `canvas-modules`
-- `canvas-files`
-- `canvas-assignments`
-- `canvas-review`
+Skills live in [`skills/`](skills/). Each domain skill points agents back to `canvas-shared` first, then gives quick decisions, command examples, Canvas concepts, common errors, and output expectations.
 
-The skills are modeled after Lark's high-signal design: shared auth and safety rules first, then narrow domain skills with quick decisions, command examples, Canvas resource concepts, common errors, and output expectations.
+## Authentication
+
+The MVP uses personal access tokens only.
+
+```bash
+canvas auth login
+```
+
+The login flow will:
+
+1. Ask for your school.
+2. Open your Canvas settings page.
+3. Guide you through creating a personal access token.
+4. Store the token locally.
+5. Run a lightweight context bootstrap.
+
+Personal access tokens are for local/self use. Do not paste tokens into hosted apps or share them with other users.
+
+## Command System
+
+`canvas-cli` uses a simple Canvas-native command system.
+
+### Student Workflows
+
+```bash
+canvas context show
+canvas review pack --course-id <course-id> --out ./review/<course>
+canvas review search --path ./review/<course> --query "dynamic programming"
+```
+
+### Domain Commands
+
+```bash
+canvas courses list
+canvas courses search "algorithms"
+canvas modules list --course-id <course-id>
+canvas assignments list --course-id <course-id>
+canvas pages show --course-id <course-id> --page <url-or-id>
+canvas files download <file-id> --out ./files
+```
+
+### Raw Read-Only API
+
+```bash
+canvas api get /api/v1/courses
+canvas api get /api/v1/courses/<course-id>/modules --params '{"include":["items"]}'
+```
+
+MVP raw API access is GET-only.
+
+## Output Formats
+
+```bash
+--format json      # default, agent-friendly
+--format pretty    # human-readable
+--format table     # simple list output
+--format ndjson    # streaming/batch-friendly
+```
+
+## Security & Privacy
+
+- Tokens are local and must never be printed.
+- Logs and errors redact `Authorization`, `access_token`, `token`, and bearer values.
+- The MVP refuses Canvas write methods.
+- Review packs exclude grades, submissions, conversations, and group member lists by default.
+- Downloads are constrained to the requested output directory.
+- Pagination follows Canvas `Link` headers instead of guessing URLs.
+
+## Roadmap
+
+Near term:
+
+- Implement `canvas auth login`.
+- Add school registry and custom Canvas URL setup.
+- Add post-login context bootstrap.
+- Implement courses, tabs, modules, assignments, pages, and files.
+- Build `canvas review pack`.
+- Package skills for `npx skills add canvas-cli -g -y`.
+
+Later:
+
+- Full student read surface: grades, submissions, quizzes, discussions, announcements, planner, groups, conversations.
+- Optional write-capable student workflows with explicit commands and dedicated skills.
+- Public npm release.
 
 ## Development
 
