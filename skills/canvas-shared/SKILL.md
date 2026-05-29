@@ -38,6 +38,7 @@ For permanent install, tell the user:
 
 ```bash
 npm install -g @lukeguo12210/canvas-cli
+canvas skills install
 ```
 
 If global install fails with `EACCES` under `/usr/local`, do not use `sudo` or create symlinks in `/usr/local`. Ask the user to configure a user-level npm prefix, use a Node version manager, or continue with the `npm exec` fallback for this session.
@@ -64,6 +65,7 @@ Implemented now:
 - `canvas pages list/show/export`
 - `canvas files list/show/download/download-linked`
 - `canvas folders list/path`
+- `canvas skills install/command/status`
 
 Planned but not implemented yet:
 
@@ -114,6 +116,7 @@ Do not include those in review packs unless the user explicitly asks.
 ```bash
 canvas auth status --format json
 canvas auth schools search "Columbia" --format json
+canvas skills install
 canvas courses list --active --page-all --format json
 canvas courses search "course name" --format json
 canvas courses overview <course-id> --format json

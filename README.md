@@ -95,6 +95,12 @@ canvas review pack --course-id <course-id> --out ./review/<course>
 ### Install Agent Skills
 
 ```bash
+canvas skills install
+```
+
+Equivalent direct installer command:
+
+```bash
 npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 ```
 
@@ -185,6 +191,10 @@ canvas review pack --course-id <course-id> --out ./review/<course> --include-all
 
 canvas api get /api/v1/courses
 canvas api get /api/v1/courses/<course-id>/modules --params '{"include":["items"]}'
+
+canvas skills install
+canvas skills command
+canvas skills status
 ```
 
 MVP raw API access is GET-only.

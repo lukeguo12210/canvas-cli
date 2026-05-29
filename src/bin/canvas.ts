@@ -10,9 +10,10 @@ import { handleMeCommand } from "../commands/me.js";
 import { handleModulesCommand } from "../commands/modules.js";
 import { handlePagesCommand } from "../commands/pages.js";
 import { handleReviewCommand } from "../commands/review.js";
+import { handleSkillsCommand } from "../commands/skills.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.4";
+const VERSION = "0.0.5";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.
@@ -38,6 +39,7 @@ COMMANDS:
   folders list      List course folders
   review pack       Create a local course review pack
   api get           Raw read-only Canvas API GET
+  skills install    Install/update bundled agent skills
   version           Print CLI version
 
 FLAGS:
@@ -117,6 +119,10 @@ async function main(argv: string[]): Promise<number> {
 
   if (command === "api") {
     return handleApiCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "skills") {
+    return handleSkillsCommand(parsed.argv.slice(1), { format: parsed.format });
   }
 
   await writeOutput(
