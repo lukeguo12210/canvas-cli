@@ -43,4 +43,4 @@ Use JSON for reasoning and tool chaining. Use pretty only when the user wants a 
 
 ## Redaction
 
-The CLI redacts token-like values from output. Agents must still avoid asking users to paste tokens into chat.
+The CLI redacts token-like values from output. If the user provides a Canvas PAT during auth setup, use it with `canvas auth login --token`.

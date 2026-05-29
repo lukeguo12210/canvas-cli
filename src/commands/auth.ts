@@ -9,7 +9,7 @@ import { makeCustomSchool, searchSchools, type School } from "../registry/school
 import { runPostLoginBootstrap } from "../workflows/context-bootstrap.js";
 import { flagValue, positionalArgs } from "./shared.js";
 
-const TOKEN_PURPOSE = "Hyperknow";
+const TOKEN_PURPOSE = "canvas-cli";
 
 export async function handleAuthCommand(
   argv: string[],
@@ -73,6 +73,7 @@ TOKEN OPTIONS:
 
 EXAMPLES:
   canvas auth schools search "Berkeley" --format json
+  canvas auth login --school "Berkeley"
   canvas auth login --school "Berkeley" --token-env CANVAS_TOKEN
   canvas auth login --school-url https://bcourses.berkeley.edu --school-name "UC Berkeley" --token "paste-token-here"
 `;
@@ -88,6 +89,21 @@ async function authLogin(argv: string[], options: { format: OutputFormat }): Pro
 
     const providedToken = await tokenFromArgs(argv);
     let token = providedToken;
+
+    if (!token && nonInteractive) {
+      await writeOutput(
+        {
+          ok: true,
+          data: tokenSetupForSchool(school),
+          meta: {
+            command: "auth login",
+            mode: "token-setup"
+          }
+        },
+        options
+      );
+      return 0;
+    }
 
     if (!token) {
       process.stdout.write(tokenInstructions(school, settingsUrl));
@@ -348,6 +364,33 @@ export async function tokenFromArgs(argv: string[]): Promise<string | undefined>
   return undefined;
 }
 
+export function tokenSetupForSchool(school: School) {
+  const settingsUrl = `${school.url}/profile/settings`;
+  const schoolArg = JSON.stringify(school.name);
+  return {
+    requiresToken: true,
+    message: `Open ${school.name}'s Canvas settings, create a new access token with purpose "${TOKEN_PURPOSE}", then send the token back so I can finish connecting Canvas.`,
+    school: {
+      name: school.name,
+      baseUrl: school.url,
+      settingsUrl
+    },
+    tokenPurpose: TOKEN_PURPOSE,
+    steps: [
+      `Open ${settingsUrl}`,
+      'Click "+ New Access Token"',
+      `Use "${TOKEN_PURPOSE}" as the purpose`,
+      "Generate the token and copy it",
+      "Send the token back, or put it in CANVAS_TOKEN"
+    ],
+    nextCommands: {
+      directToken: `canvas auth login --school ${schoolArg} --token "paste-token-here"`,
+      envToken: `CANVAS_TOKEN="paste-token-here" canvas auth login --school ${schoolArg} --token-env CANVAS_TOKEN`,
+      stdinToken: `printf '%s' "paste-token-here" | canvas auth login --school ${schoolArg} --token-stdin`
+    }
+  };
+}
+
 async function promptCustomSchool(io: PromptIO): Promise<School> {
   const name = await io.question("School display name: ");
   const url = await io.question("Canvas base URL: ");
@@ -373,9 +416,9 @@ async function readStdin(): Promise<string> {
 
 function tokenInstructions(school: School, settingsUrl: string): string {
   return `
-Canvas token setup for ${school.name}
+Let's connect ${school.name} to Canvas CLI.
 
-1. Go to ${settingsUrl}
+1. Open ${settingsUrl}
 2. Click "+ New Access Token"
 3. Enter "${TOKEN_PURPOSE}" as the purpose
 4. Optionally set an expiration date

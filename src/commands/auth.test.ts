@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { authHelpText, chooseSchool, resolveSchoolFromArgs, tokenFromArgs } from "./auth.js";
+import {
+  authHelpText,
+  chooseSchool,
+  resolveSchoolFromArgs,
+  tokenFromArgs,
+  tokenSetupForSchool
+} from "./auth.js";
 import type { PromptIO } from "../core/prompt.js";
 
 describe("chooseSchool", () => {
@@ -65,6 +71,28 @@ describe("tokenFromArgs", () => {
     process.env.CANVAS_TEST_TOKEN = "env-token";
     await expect(tokenFromArgs(["--token-env", "CANVAS_TEST_TOKEN"])).resolves.toBe("env-token");
     delete process.env.CANVAS_TEST_TOKEN;
+  });
+});
+
+describe("tokenSetupForSchool", () => {
+  it("returns friendly setup details for agents to show users", () => {
+    expect(
+      tokenSetupForSchool({
+        name: "University of California, Berkeley (bCourses)",
+        url: "https://bcourses.berkeley.edu"
+      })
+    ).toMatchObject({
+      requiresToken: true,
+      school: {
+        baseUrl: "https://bcourses.berkeley.edu",
+        settingsUrl: "https://bcourses.berkeley.edu/profile/settings"
+      },
+      tokenPurpose: "canvas-cli",
+      nextCommands: {
+        directToken:
+          'canvas auth login --school "University of California, Berkeley (bCourses)" --token "paste-token-here"'
+      }
+    });
   });
 });
 

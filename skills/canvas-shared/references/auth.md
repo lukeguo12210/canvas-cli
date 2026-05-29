@@ -4,6 +4,7 @@ Implemented auth commands:
 
 ```bash
 canvas auth login
+canvas auth login --school "Berkeley"
 canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
 canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token "paste-token-here"
 canvas auth schools search "Columbia" --format json
@@ -33,33 +34,48 @@ Do not attempt `sudo npm install -g` from inside an agent session. Prefer the fa
 
 ## Agent Login Flow
 
-Agents can complete login non-interactively when the user explicitly provides a Canvas PAT.
+Agents can guide and complete login non-interactively.
 
 1. Search schools:
 
 ```bash
-canvas auth schools search "Columbia" --format json
+canvas auth schools search "Berkeley" --format json
 ```
 
-2. Login with a known school match:
+2. If the user has not provided a PAT yet, get a friendly token setup response:
 
 ```bash
-canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
+canvas auth login --school "Berkeley" --format json
 ```
 
-or, if the user provides the token directly in chat:
+Show the user:
+
+- Canvas URL: `school.baseUrl`
+- Token page: `school.settingsUrl`
+- Token purpose: `canvas-cli`
+- The steps returned by the command
+
+Tell the user to open the settings URL, create a new access token with purpose `canvas-cli`, then send the token back.
+
+3. Finish login once the user provides a token:
 
 ```bash
-canvas auth login --school "Columbia" --token "paste-token-here"
+canvas auth login --school "Berkeley" --token "paste-token-here"
 ```
 
-3. For a custom Canvas URL:
+or:
+
+```bash
+canvas auth login --school "Berkeley" --token-env CANVAS_TOKEN
+```
+
+4. For a custom Canvas URL:
 
 ```bash
 canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token-env CANVAS_TOKEN
 ```
 
-4. Verify:
+5. Verify:
 
 ```bash
 canvas auth status --format json
@@ -97,14 +113,13 @@ The CLI supports agent-provided PATs for initial setup:
 - `--token-env <ENV_NAME>`: read token from an environment variable.
 - `--token-stdin`: read token from stdin.
 
-Prefer `--token-env` or `--token-stdin` when possible. If the user pastes a PAT into chat, use it only for `canvas auth login`, then do not repeat, print, summarize, or store it anywhere except the Canvas config written by the CLI.
+If the user pastes a PAT into chat, use it directly to complete login:
 
-Never print:
+```bash
+canvas auth login --school "Berkeley" --token "paste-token-here"
+```
 
-- PAT values
-- `Authorization` headers
-- bearer tokens
-- query params named `token`, `access_token`, `api_key`, `verifier`, or `code`
+After login, continue with `canvas auth status --format json` and course discovery.
 
 ## Auth Status
 

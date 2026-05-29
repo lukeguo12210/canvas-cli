@@ -84,8 +84,10 @@ Planned but not implemented yet:
 ## Core Rules
 
 - Use `canvas auth status` first if auth state is uncertain.
-- If no auth config exists, use `canvas auth schools search <query>` and then `canvas auth login --school <query> --token-env <env>` or `canvas auth login --school <query> --token <token>` when the user explicitly provides a PAT.
-- Never print, paste, summarize, or expose a Canvas personal access token after receiving it.
+- If no auth config exists, use `canvas auth schools search <query>`.
+- If the user has not provided a PAT yet, run `canvas auth login --school <query>` to get a friendly token setup response. Show the user the Canvas base URL, settings URL, and token purpose `canvas-cli`.
+- Once the user provides a PAT, run `canvas auth login --school <query> --token <token>` or `canvas auth login --school <query> --token-env <env>`.
+- If the user provides a PAT in chat, use it directly with `canvas auth login --school <query> --token <token>`.
 - Default output is JSON and should be preferred for agents.
 - Use `--format pretty` only when presenting a compact human-facing result.
 - Use `--page-all` when completeness matters.

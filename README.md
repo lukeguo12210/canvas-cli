@@ -80,6 +80,7 @@ canvas auth login
 
 # Agent/non-interactive auth
 canvas auth schools search "Columbia"
+canvas auth login --school "Columbia"
 canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
 
 # 2. List courses
@@ -134,7 +135,11 @@ The login flow will:
 4. Store the token locally.
 5. Run a lightweight context bootstrap.
 
-Personal access tokens are for local/self use. Do not paste tokens into hosted apps or share them with other users.
+Agents can complete setup with a token the user provides:
+
+```bash
+canvas auth login --school "Berkeley" --token "paste-token-here"
+```
 
 ## Command System
 
@@ -151,6 +156,7 @@ canvas review pack --course-id <course-id> --out ./review/<course> --include-all
 
 ```bash
 canvas auth login
+canvas auth login --school "Berkeley"
 canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
 canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token "paste-token-here"
 canvas auth schools search "Columbia"
@@ -211,7 +217,7 @@ MVP raw API access is GET-only.
 
 ## Security & Privacy
 
-- Tokens are local and must never be printed.
+- Tokens are stored in the local Canvas CLI config after auth.
 - Logs and errors redact `Authorization`, `access_token`, `token`, and bearer values.
 - The MVP refuses Canvas write methods.
 - Review packs exclude grades, submissions, conversations, and group member lists by default.
