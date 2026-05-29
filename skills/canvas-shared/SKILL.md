@@ -12,19 +12,45 @@ metadata:
 
 Read this skill before using any other Canvas skill.
 
+## Current CLI Surface
+
+Implemented now:
+
+- `canvas auth login`
+- `canvas auth status`
+- `canvas auth logout`
+- `canvas config show`
+- `canvas me`
+- `canvas courses list`
+- `canvas courses search <query>`
+- `canvas courses show <course-id>`
+- `canvas courses overview <course-id>`
+- `canvas tabs list --course-id <course-id>`
+
+Planned but not implemented yet:
+
+- `canvas context show`
+- `canvas review pack`
+- `canvas api get`
+- modules, pages, files, assignments, grades, submissions, discussions, calendar, groups, conversations
+
 ## Core Rules
 
-- Use `canvas auth login` for interactive PAT setup.
+- Use `canvas auth status` first if auth state is uncertain.
+- If no auth config exists, ask the user to run `canvas auth login`.
 - Never print, paste, summarize, or expose a Canvas personal access token.
-- Use `canvas auth status` if auth state is uncertain.
-- `canvas auth login` automatically runs post-login context bootstrap once implemented.
-- Use `canvas context show` to inspect cached user, school, course, and semester context.
 - Default output is JSON and should be preferred for agents.
 - Use `--format pretty` only when presenting a compact human-facing result.
 - Use `--page-all` when completeness matters.
 - Canvas pagination follows `Link` headers; do not synthesize next-page URLs.
-- Raw API escape hatch is `canvas api get <path>`.
 - MVP cannot write to Canvas.
+- Do not pretend planned commands exist. If a command is marked planned, say it is not implemented yet.
+
+## References
+
+- [Auth flow](references/auth.md)
+- [Output format](references/output.md)
+- [Pagination](references/pagination.md)
 
 ## Privacy
 
@@ -39,8 +65,18 @@ Do not include those in review packs unless the user explicitly asks.
 
 ## Common Errors
 
-- `401`: invalid or expired PAT; ask the user to run `canvas auth login`.
-- `403`: locked, unpublished, or permission-denied content.
-- `404`: content unavailable or not visible to this user.
-- `429`: rate limited; retry later or use lower pagination concurrency.
-- `503`: Canvas discussion cache or backend temporarily unavailable.
+- `NO_AUTH_CONFIG`: no local auth config; ask the user to run `canvas auth login`.
+- `CANVAS_NETWORK_ERROR`: Canvas could not be reached; retry later or check network/sandbox access.
+- `CANVAS_UNAUTHORIZED` / `401`: invalid or expired PAT; ask the user to run `canvas auth login`.
+- `CANVAS_FORBIDDEN` / `403`: locked, unpublished, or permission-denied content.
+- `CANVAS_NOT_FOUND` / `404`: content unavailable or not visible to this user.
+- `CANVAS_RATE_LIMITED` / `429`: rate limited; retry later or use lower pagination concurrency.
+- `CANVAS_SERVER_ERROR` / `5xx`: Canvas backend issue.
+
+## Good First Commands
+
+```bash
+canvas auth status --format json
+canvas courses list --active --page-all --format json
+canvas courses search "course name" --format json
+```

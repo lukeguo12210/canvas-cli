@@ -2,9 +2,9 @@
 
 ## 1. Summary
 
-Build `canvas-cli`, an agent-native TypeScript/Node CLI and skills bundle for students to authenticate with Canvas LMS using a personal access token, pull all student-facing read-only Canvas information, and create structured local study/review packs that LLM agents can understand and use.
+Build `canvas-lms-cli`, an agent-native TypeScript/Node CLI and skills bundle for students to authenticate with Canvas LMS using a personal access token, pull all student-facing read-only Canvas information, and create structured local study/review packs that LLM agents can understand and use.
 
-The npm package/project name is `canvas-cli`. The installed command is `canvas`.
+The npm package name is `canvas-lms-cli`. The repository/project name can remain `canvas-cli`. The installed command is `canvas`.
 
 MVP flagship workflow:
 
@@ -292,7 +292,7 @@ Error shape:
 
 - Language: TypeScript.
 - Runtime: Node.js 20+.
-- Package manager: pnpm.
+- Package manager: npm.
 - Build: `tsup` or `tsx` for dev, `tsup` for distribution.
 - CLI parser: `commander` or `clipanion`.
 - Prompts: `@inquirer/prompts`.
@@ -386,7 +386,7 @@ canvas-cli/
 
 ```json
 {
-  "name": "canvas-cli",
+  "name": "canvas-lms-cli",
   "bin": {
     "canvas": "dist/bin/canvas.js"
   },
@@ -397,11 +397,6 @@ canvas-cli/
   ]
 }
 ```
-
-Potential package rename if npm `canvas-cli` is unavailable:
-
-- `@hyperknow/canvas-cli`
-- `@hyperknow/canvas`
 
 The binary should remain `canvas`.
 
@@ -921,8 +916,8 @@ Canvas courses vary a lot. The packer should be self-aware:
 Preferred public install:
 
 ```bash
-npm install -g canvas-cli
-npx skills add canvas-cli -g -y
+npm install -g canvas-lms-cli
+npx skills add canvas-lms-cli -g -y
 ```
 
 CLI-assisted install can also be supported:
@@ -931,7 +926,7 @@ CLI-assisted install can also be supported:
 canvas skills install
 ```
 
-`npx skills add canvas-cli -g -y` is the canonical Lark-style path. `canvas skills install` is a convenience wrapper and fallback for environments where the skills CLI is unavailable.
+`npx skills add canvas-lms-cli -g -y` is the canonical package-based path. `canvas skills install` is a convenience wrapper and fallback for environments where the skills CLI is unavailable.
 
 `canvas skills install` should detect likely agent skill folders and copy bundled skills:
 
@@ -1288,6 +1283,7 @@ Against a real Canvas sandbox or developer account:
 - Finalize PRD.
 - Create package skeleton.
 - Set up TypeScript build/test/lint.
+- Create initial skill skeletons and package them.
 
 ### M1: Auth and Client
 
@@ -1297,6 +1293,7 @@ Against a real Canvas sandbox or developer account:
 - Pagination.
 - Output envelope.
 - `canvas api get`.
+- Update `canvas-shared` with auth, token safety, output, pagination, and raw API behavior.
 
 ### M2: Core Course Reads
 
@@ -1306,6 +1303,12 @@ Against a real Canvas sandbox or developer account:
 - Pages.
 - Files/folders.
 - Assignments.
+- Update corresponding skills while each feature lands:
+  - `canvas-courses`
+  - `canvas-modules`
+  - `canvas-pages`
+  - `canvas-files`
+  - `canvas-assignments`
 
 ### M3: Review Pack
 
@@ -1314,6 +1317,7 @@ Against a real Canvas sandbox or developer account:
 - File download.
 - Manifest/citations/fetch log.
 - Dynamic course setup handling.
+- Update `canvas-review` in the same milestone.
 
 ### M4: Full Student Read Surface
 
@@ -1326,11 +1330,13 @@ Against a real Canvas sandbox or developer account:
 - Calendar/planner/todos.
 - Groups.
 - Conversations.
+- Add/update one skill per command family as those commands ship.
 
-### M5: Skills and Installer
+### M5: Skills Installer and Agent Verification
 
-- Initial skills.
+- Confirm all feature skills match implemented commands.
 - `canvas skills install`.
+- `npx skills add canvas-lms-cli -g -y`.
 - Agent verification examples.
 
 ### M6: Polish
@@ -1344,7 +1350,7 @@ Against a real Canvas sandbox or developer account:
 
 MVP is acceptable when:
 
-- `npm install -g canvas-cli` installs a working `canvas` command.
+- `npm install -g canvas-lms-cli` installs a working `canvas` command.
 - `canvas auth login` supports school picker, browser open, PAT entry, and validation.
 - `canvas courses list` returns structured JSON.
 - `canvas review pack --course-id <id>` creates a complete agent-readable local pack for a representative course.
@@ -1360,7 +1366,7 @@ MVP is acceptable when:
 These should be resolved during implementation, not block the PRD:
 
 - Confirm npm package name availability: `canvas-cli` versus `@hyperknow/canvas-cli`.
-- Confirm exact skills registry/package metadata required for `npx skills add canvas-cli -g -y`.
+- Confirm exact skills registry/package metadata required for `npx skills add canvas-lms-cli -g -y`.
 - Confirm best local config path on Windows.
 - Confirm whether Canvas conversation `auto_mark_as_read=false` fully prevents read-state mutation across institutions.
 - Confirm the most reliable endpoint for "my groups" across Canvas versions; use course-scoped groups with `only_own_groups=true` as the conservative fallback.

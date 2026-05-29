@@ -1,7 +1,7 @@
 {
-  "name": "canvas-cli",
-  "version": "0.0.0",
-  "description": "Canvas CLI and AI agent skills bundle for technical students.",
+  "name": "canvas-lms-cli",
+  "version": "0.0.1",
+  "description": "Canvas LMS CLI and AI agent skills bundle for technical students.",
   "type": "module",
   "bin": {
     "canvas": "dist/bin/canvas.js"
@@ -30,6 +30,14 @@
     "students",
     "education"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeguo12210/canvas-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lukeguo12210/canvas-cli/issues"
+  },
+  "homepage": "https://github.com/lukeguo12210/canvas-cli#readme",
   "license": "BUSL-1.1",
   "devDependencies": {
     "@types/node": "^24.0.0",

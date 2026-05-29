@@ -2,6 +2,18 @@
 
 This document converts the engineering PRD into ordered implementation phases. Each phase should leave the repo in a runnable, testable state.
 
+## Skill Coupling Rule
+
+Skills are not a final polish phase. Every phase that adds or changes CLI behavior must update the corresponding skill in the same phase.
+
+Done criteria for every feature phase:
+
+- CLI command works.
+- Tests cover the command's important behavior.
+- The related `skills/<skill-name>/SKILL.md` describes when to use it.
+- The skill includes copy-pastable commands matching the implementation.
+- The skill points back to `../canvas-shared/SKILL.md` when it depends on auth, pagination, output formats, or safety rules.
+
 ## Phase 0: Project Scaffold
 
 Goal: create a TypeScript/Node CLI package that installs a `canvas` command locally.
@@ -44,12 +56,26 @@ canvas --help
 canvas version
 ```
 
+9. Create initial skill directories and frontmatter:
+
+```text
+skills/canvas-shared/SKILL.md
+skills/canvas-courses/SKILL.md
+skills/canvas-modules/SKILL.md
+skills/canvas-files/SKILL.md
+skills/canvas-assignments/SKILL.md
+skills/canvas-review/SKILL.md
+```
+
+10. Ensure `package.json` includes `skills` in published files.
+
 Done when:
 
-- `pnpm install` works.
-- `pnpm dev -- --help` prints help.
-- `pnpm build` emits `dist/bin/canvas.js`.
+- `npm install` works.
+- `npm run dev -- --help` prints help.
+- `npm run build` emits `dist/bin/canvas.js`.
 - `node dist/bin/canvas.js --help` works.
+- Skill skeletons are included in the package.
 
 ## Phase 1: Core Runtime
 
@@ -67,6 +93,9 @@ src/core/pagination.ts
 src/core/canvas-client.ts
 src/schemas/commands.ts
 src/schemas/canvas.ts
+skills/canvas-shared/SKILL.md
+skills/canvas-shared/references/pagination.md
+skills/canvas-shared/references/output.md
 ```
 
 Build steps:
@@ -118,6 +147,15 @@ type Failure = {
 
 7. Implement pagination parser for Canvas `Link` headers.
 8. Add `--page-all`, `--page-limit`, `--page-size`, `--page-delay`.
+9. Update `canvas-shared` with:
+
+- output envelope contract
+- output formats
+- token redaction rules
+- pagination behavior
+- raw request safety expectations
+
+10. Add `references/pagination.md` and `references/output.md` with exact examples.
 
 Tests:
 
@@ -135,6 +173,7 @@ Done when:
 - Unit tests pass.
 - Mocked paginated Canvas responses fetch correctly.
 - Error output never leaks token-like values.
+- `canvas-shared` explains output and pagination accurately.
 
 ## Phase 2: School Registry and Auth Login
 
@@ -147,6 +186,8 @@ src/registry/schools.ts
 src/commands/auth.ts
 src/commands/config.ts
 src/commands/me.ts
+skills/canvas-shared/SKILL.md
+skills/canvas-shared/references/auth.md
 ```
 
 Build steps:
@@ -187,6 +228,17 @@ canvas me
 ```
 
 12. After login succeeds, call a no-op internal bootstrap hook. Phase 4 will replace the hook with the real context bootstrap. Do not print placeholder text to users.
+13. Update `canvas-shared` with:
+
+- `canvas auth login`
+- school picker behavior
+- PAT safety
+- `canvas auth status`
+- `canvas auth logout`
+- `canvas config show`
+- `canvas me`
+
+14. Add `references/auth.md` with the exact login flow and expected prompts.
 
 Tests:
 
@@ -202,6 +254,7 @@ Done when:
 - `canvas auth login` works end to end against a mocked server.
 - `canvas auth status` never prints token.
 - `canvas me` returns current profile JSON.
+- `canvas-shared` documents the implemented auth/config/me commands.
 
 ## Phase 3: Read-Only Canvas Commands
 
@@ -221,6 +274,7 @@ Files:
 ```text
 src/commands/courses.ts
 src/commands/tabs.ts
+skills/canvas-courses/SKILL.md
 ```
 
 Commands:
@@ -233,11 +287,18 @@ canvas courses overview <course-id>
 canvas tabs list --course-id <course-id>
 ```
 
+Skill work:
+
+- Update `canvas-courses` with course discovery, search, show, overview, and tabs commands.
+- Document course ID preference after a course is resolved.
+- Document `canvas context show` as the first source of course context once Phase 4 exists.
+
 Done when:
 
 - Active courses can be listed.
 - Course search resolves ambiguous names.
 - Overview includes course, tabs, modules summary, assignments summary.
+- `canvas-courses` matches the implemented command behavior.
 
 ### 3.2 Modules
 
@@ -245,6 +306,7 @@ Files:
 
 ```text
 src/commands/modules.ts
+skills/canvas-modules/SKILL.md
 ```
 
 Commands:
@@ -257,11 +319,19 @@ canvas modules item --course-id <course-id> --module-id <module-id> --item-id <i
 canvas modules export --course-id <course-id> --module-id <module-id> --out <dir>
 ```
 
+Skill work:
+
+- Update `canvas-modules` with module list/items/item/export commands.
+- Document module item types: Page, File, Assignment, Quiz, Discussion, ExternalUrl, ExternalTool, SubHeader.
+- Document fallback from inline `items` to `canvas modules items`.
+- Document that module order and item order must be preserved.
+
 Done when:
 
 - Inline module items work.
 - Missing inline items fallback works.
 - Module order and item order are preserved.
+- `canvas-modules` matches the implemented traversal behavior.
 
 ### 3.3 Pages
 
@@ -270,6 +340,8 @@ Files:
 ```text
 src/commands/pages.ts
 src/core/html.ts
+skills/canvas-pages/SKILL.md
+skills/canvas-review/SKILL.md
 ```
 
 Commands:
@@ -281,11 +353,19 @@ canvas pages front --course-id <course-id>
 canvas pages export --course-id <course-id> --page <url-or-id> --out <dir>
 ```
 
+Skill work:
+
+- Add `canvas-pages` when page commands are implemented.
+- Document Canvas page URL slugs versus IDs.
+- Document HTML-to-Markdown behavior.
+- Update `canvas-review` with how pages appear inside review packs.
+
 Done when:
 
 - Canvas HTML converts to Markdown.
 - Source URLs are preserved in output metadata.
 - Active content is stripped.
+- `canvas-pages` and `canvas-review` describe page export behavior.
 
 ### 3.4 Files and Folders
 
@@ -295,6 +375,8 @@ Files:
 src/commands/files.ts
 src/commands/folders.ts
 src/core/download.ts
+skills/canvas-files/SKILL.md
+skills/canvas-review/SKILL.md
 ```
 
 Commands:
@@ -308,12 +390,20 @@ canvas folders list --course-id <course-id>
 canvas folders path --course-id <course-id> --path <path>
 ```
 
+Skill work:
+
+- Update `canvas-files` with file list/show/download/download-linked/folder commands.
+- Document safe download path behavior.
+- Document linked-files default versus all-files explicit mode.
+- Update `canvas-review` with file placement and citations behavior.
+
 Done when:
 
 - File metadata fetch works.
 - File download writes safely under target dir.
 - Path traversal is impossible.
 - Duplicate filenames are handled.
+- `canvas-files` matches download and folder behavior.
 
 ### 3.5 Assignments and Assignment Groups
 
@@ -322,6 +412,8 @@ Files:
 ```text
 src/commands/assignments.ts
 src/commands/assignment-groups.ts
+skills/canvas-assignments/SKILL.md
+skills/canvas-review/SKILL.md
 ```
 
 Commands:
@@ -334,11 +426,20 @@ canvas assignments export --course-id <course-id> --assignment-id <assignment-id
 canvas assignment-groups list --course-id <course-id>
 ```
 
+Skill work:
+
+- Update `canvas-assignments` with list/show/export/group commands.
+- Document due date and override expectations.
+- Document assignment HTML-to-Markdown export.
+- Document that submission data is not part of default assignment/review behavior.
+- Update `canvas-review` with assignment placement in review packs.
+
 Done when:
 
 - Due dates are parsed but raw dates remain available.
 - Assignment HTML exports to Markdown.
 - Attachments are represented in metadata.
+- `canvas-assignments` matches the implemented assignment behavior.
 
 ### 3.6 Remaining Student Read Surface
 
@@ -355,6 +456,13 @@ src/commands/planner.ts
 src/commands/todos.ts
 src/commands/groups.ts
 src/commands/conversations.ts
+skills/canvas-grades/SKILL.md
+skills/canvas-submissions/SKILL.md
+skills/canvas-quizzes/SKILL.md
+skills/canvas-discussions/SKILL.md
+skills/canvas-calendar/SKILL.md
+skills/canvas-groups/SKILL.md
+skills/canvas-conversations/SKILL.md
 ```
 
 Commands:
@@ -385,11 +493,25 @@ canvas conversations show <conversation-id>
 canvas conversations unread-count
 ```
 
+Skill work:
+
+- Add or update one skill per command family:
+  - `canvas-grades`
+  - `canvas-submissions`
+  - `canvas-quizzes`
+  - `canvas-discussions`
+  - `canvas-calendar`
+  - `canvas-groups`
+  - `canvas-conversations`
+- Mark sensitive read-only commands explicitly in each skill.
+- Make clear that grades, submissions, conversations, and group member lists are not included in review packs by default.
+
 Done when:
 
 - Commands return normalized JSON.
 - Sensitive commands are explicit and never used automatically by bootstrap/review pack unless included.
 - Discussion 403/503 states are represented clearly.
+- Each command family has a matching skill with examples.
 
 ## Phase 4: Post-Login Context Bootstrap
 
@@ -401,6 +523,9 @@ Files:
 src/commands/context.ts
 src/workflows/context-bootstrap.ts
 src/schemas/context.ts
+skills/canvas-shared/SKILL.md
+skills/canvas-courses/SKILL.md
+skills/canvas-review/SKILL.md
 ```
 
 Commands:
@@ -452,6 +577,9 @@ Build steps:
 5. Add context bootstrap call at end of `canvas auth login`.
 6. Ensure bootstrap failures do not invalidate successful auth.
 7. Print compact summary after login.
+8. Update `canvas-shared` with automatic post-login bootstrap behavior.
+9. Update `canvas-courses` to prefer `canvas context show` before refetching courses.
+10. Update `canvas-review` to inspect context before course selection.
 
 Done when:
 
@@ -459,6 +587,7 @@ Done when:
 - `canvas context show` reads cache without network.
 - `canvas context show --refresh` refreshes from Canvas.
 - Bootstrap does not run heavy/private commands.
+- Shared/courses/review skills describe context bootstrap and cache usage.
 
 ## Phase 5: Review Pack
 
@@ -471,6 +600,7 @@ src/commands/review.ts
 src/workflows/review-pack.ts
 src/workflows/local-search.ts
 src/schemas/manifest.ts
+skills/canvas-review/SKILL.md
 ```
 
 Commands:
@@ -529,6 +659,15 @@ canvas-structure.json
 --include full-discussions
 ```
 
+16. Update `canvas-review` with:
+
+- exact review pack commands
+- output layout
+- manifest/citation behavior
+- default includes/excludes
+- optional include flags
+- locked/unavailable/external resource handling
+
 Done when:
 
 - Review pack preserves Canvas course structure.
@@ -536,6 +675,7 @@ Done when:
 - Manifests are valid JSON.
 - LLM can inspect `manifest.json` and navigate local files.
 - No private/sensitive data is included by default.
+- `canvas-review` is enough for an agent to create and inspect a review pack.
 
 ## Phase 6: Raw API Read-Only Escape Hatch
 
@@ -545,6 +685,7 @@ Files:
 
 ```text
 src/commands/api.ts
+skills/canvas-shared/SKILL.md
 ```
 
 Command:
@@ -563,48 +704,33 @@ Build steps:
 5. Apply sensitive/admin endpoint denylist.
 6. Support pagination flags.
 7. Redact output/errors.
+8. Update `canvas-shared` with raw API usage rules and examples.
 
 Done when:
 
 - GET works.
 - POST/PUT/PATCH/DELETE do not exist.
 - Raw command cannot masquerade.
+- `canvas-shared` documents raw API behavior and restrictions.
 
-## Phase 7: Skills Bundle
+## Phase 7: Skills Packaging and Public Release
 
-Goal: ship Lark-style skills that let agents operate the CLI.
+Goal: package the CLI and already-coupled skills for public use.
 
-Files:
-
-```text
-skills/canvas-shared/SKILL.md
-skills/canvas-shared/references/auth.md
-skills/canvas-shared/references/pagination.md
-skills/canvas-shared/references/output.md
-skills/canvas-courses/SKILL.md
-skills/canvas-modules/SKILL.md
-skills/canvas-files/SKILL.md
-skills/canvas-assignments/SKILL.md
-skills/canvas-review/SKILL.md
-src/commands/skills.ts
-src/skills/installer.ts
-```
+The skills should already exist by this point because every feature phase owns its matching skill updates.
 
 Build steps:
 
-1. Write exact MVP skills from PRD.
+1. Confirm every implemented command has matching skill documentation.
 2. Ensure every domain skill says to read `../canvas-shared/SKILL.md` first.
-3. Add command examples.
-4. Add common Canvas errors.
-5. Add context bootstrap behavior to shared/courses/review skills.
-6. Package skills in npm `files`.
-7. Support canonical install:
+3. Ensure skills are included in npm `files`.
+4. Support canonical skill install:
 
 ```bash
-npx skills add canvas-cli -g -y
+npx skills add canvas-lms-cli -g -y
 ```
 
-8. Optional fallback:
+5. Optional fallback:
 
 ```bash
 canvas skills install
@@ -613,52 +739,39 @@ canvas skills install --target codex
 canvas skills install --target claude
 ```
 
-Done when:
+6. Confirm npm package name:
 
-- Skills are included in npm package.
-- At least one agent environment can install and load them.
-- Agent can follow skills to run auth, inspect context, and create review pack.
+- `canvas-lms-cli`
 
-## Phase 8: Packaging and Public Release
-
-Goal: prepare public npm/repo release.
-
-Build steps:
-
-1. Confirm npm package name:
-
-- `canvas-cli`
-- fallback `@hyperknow/canvas-cli`
-
-2. Add README install docs.
-3. Add license.
-4. Add changelog.
-5. Add security notes for PATs.
-6. Add examples:
+7. Add README install docs.
+8. Add license.
+9. Add changelog.
+10. Add security notes for PATs.
+11. Add examples:
 
 ```bash
-npm install -g canvas-cli
+npm install -g canvas-lms-cli
 canvas auth login
 canvas context show
 canvas courses list
 canvas review pack --course-id <id> --out ./review/<course>
-npx skills add canvas-cli -g -y
+npx skills add canvas-lms-cli -g -y
 ```
 
-7. Add CI:
+12. Add CI:
 
 - install
 - typecheck
 - test
 - build
 
-8. Publish dry run:
+13. Publish dry run:
 
 ```bash
 npm pack --dry-run
 ```
 
-9. Publish public package.
+14. Publish public package.
 
 Done when:
 
@@ -666,6 +779,8 @@ Done when:
 - `canvas --help` works globally.
 - Skills are packaged.
 - README matches implemented commands.
+- At least one agent environment can install and load skills.
+- Agent can follow skills to run auth, inspect context, and create review pack.
 
 ## Suggested Implementation Order
 
@@ -683,11 +798,10 @@ Strict order:
 10. Phase 5: Review Pack
 11. Phase 3.6: Remaining Student Read Surface
 12. Phase 6: Raw API Read-Only Escape Hatch
-13. Phase 7: Skills Bundle
-14. Phase 8: Packaging and Public Release
+13. Phase 7: Skills Packaging and Public Release
 
 Reasoning:
 
 - Auth and context need courses/tabs/modules/assignments.
 - Review pack needs modules/pages/files/assignments.
-- Skills should be written after command behavior stabilizes enough for examples to be reliable.
+- Skills are written alongside each feature so agent behavior stays aligned with the CLI.
