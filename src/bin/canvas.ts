@@ -1,4 +1,8 @@
 import { writeOutput } from "../core/output.js";
+import type { OutputFormat } from "../core/output.js";
+import { handleAuthCommand } from "../commands/auth.js";
+import { handleConfigCommand } from "../commands/config.js";
+import { handleMeCommand } from "../commands/me.js";
 
 const VERSION = "0.0.0";
 
@@ -11,6 +15,9 @@ USAGE:
 COMMANDS:
   auth login        Interactive Canvas PAT setup
   auth status       Show redacted auth status
+  auth logout       Remove local Canvas auth config
+  config show       Show redacted local config
+  me                Show current Canvas user profile
   context show      Show cached post-login context
   courses list      List active Canvas courses
   review pack       Create a local course review pack
@@ -21,12 +28,13 @@ FLAGS:
   --format <fmt>    Output format: json | pretty | table | ndjson
 
 MVP STATUS:
-  This scaffold currently implements root help and version only.
+  Auth/config/me are in progress. Course and review commands are planned next.
 `;
 }
 
 async function main(argv: string[]): Promise<number> {
-  const [command, subcommand] = argv;
+  const parsed = parseGlobalOptions(argv);
+  const [command] = parsed.argv;
 
   if (!command || command === "--help" || command === "-h" || command === "help") {
     process.stdout.write(helpText());
@@ -40,24 +48,21 @@ async function main(argv: string[]): Promise<number> {
         data: { version: VERSION },
         meta: { command: "version" }
       },
-      { format: "pretty" }
+      { format: parsed.format === "json" ? "json" : "pretty" }
     );
     return 0;
   }
 
-  if (command === "auth" && subcommand === "login") {
-    await writeOutput(
-      {
-        ok: false,
-        error: {
-          code: "NOT_IMPLEMENTED",
-          message: "canvas auth login is planned for Phase 2.",
-          retryable: false
-        }
-      },
-      { format: "pretty" }
-    );
-    return 1;
+  if (command === "auth") {
+    return handleAuthCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "config") {
+    return handleConfigCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "me") {
+    return handleMeCommand({ format: parsed.format });
   }
 
   await writeOutput(
@@ -65,13 +70,37 @@ async function main(argv: string[]): Promise<number> {
       ok: false,
       error: {
         code: "UNKNOWN_COMMAND",
-        message: `Unknown command: ${argv.join(" ")}`,
+        message: `Unknown command: ${parsed.argv.join(" ")}`,
         retryable: false
       }
     },
-    { format: "pretty" }
+    { format: parsed.format }
   );
   return 1;
+}
+
+function parseGlobalOptions(argv: string[]): { argv: string[]; format: OutputFormat } {
+  const nextArgv: string[] = [];
+  let format: OutputFormat = "json";
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--format") {
+      const value = argv[index + 1];
+      if (isOutputFormat(value)) {
+        format = value;
+        index += 1;
+        continue;
+      }
+    }
+    nextArgv.push(arg);
+  }
+
+  return { argv: nextArgv, format };
+}
+
+function isOutputFormat(value: string | undefined): value is OutputFormat {
+  return value === "json" || value === "pretty" || value === "table" || value === "ndjson";
 }
 
 main(process.argv.slice(2))

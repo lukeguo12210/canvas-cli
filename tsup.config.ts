@@ -1,7 +1,9 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/bin/canvas.ts"],
+  entry: {
+    "bin/canvas": "src/bin/canvas.ts"
+  },
   format: ["esm"],
   target: "node20",
   clean: true,

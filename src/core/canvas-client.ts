@@ -49,6 +49,8 @@ export class CanvasClient {
     let pagesFetched = 0;
     const pageLimit = options.pageLimit ?? 50;
 
+    let hasNext = false;
+
     while (nextUrl) {
       pagesFetched += 1;
       if (pagesFetched > pageLimit) {
@@ -78,6 +80,7 @@ export class CanvasClient {
       pages.push(data);
 
       const links = parseLinkHeader(response.headers.get("link"));
+      hasNext = Boolean(links.next);
       nextUrl = options.pageAll ? links.next ?? null : null;
     }
 
@@ -91,7 +94,7 @@ export class CanvasClient {
         },
         pagination: {
           pagesFetched,
-          hasNext: Boolean(nextUrl)
+          hasNext
         }
       }
     };

@@ -52,6 +52,20 @@ export class ConfigStore {
     const config = await this.read();
     return config ? (redactSecrets(config) as CanvasConfig) : null;
   }
+
+  async activeProfile(): Promise<CanvasProfile> {
+    const config = await this.read();
+    if (!config) {
+      throw new Error("No Canvas auth config found. Run canvas auth login.");
+    }
+
+    const profile = config.profiles[config.activeProfile];
+    if (!profile) {
+      throw new Error(`Active Canvas profile not found: ${config.activeProfile}`);
+    }
+
+    return profile;
+  }
 }
 
 function isNotFound(error: unknown): boolean {

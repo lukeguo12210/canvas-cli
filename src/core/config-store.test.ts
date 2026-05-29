@@ -67,4 +67,29 @@ describe("ConfigStore", () => {
       expect(fileMode).toBe(0o600);
     }
   });
+
+  it("returns the active profile", async () => {
+    const filePath = path.join(tempDir, "config.json");
+    const store = new ConfigStore(filePath);
+
+    await store.write({
+      version: 1,
+      activeProfile: "default",
+      profiles: {
+        default: {
+          schoolName: "Test",
+          baseUrl: "https://canvas.example.edu",
+          token: "secret",
+          createdAt: "2026-05-29T00:00:00.000Z"
+        }
+      }
+    });
+
+    expect(await store.activeProfile()).toEqual({
+      schoolName: "Test",
+      baseUrl: "https://canvas.example.edu",
+      token: "secret",
+      createdAt: "2026-05-29T00:00:00.000Z"
+    });
+  });
 });

@@ -209,8 +209,6 @@ npm run test
 npm run build
 ```
 
-The current environment blocked dependency installation during scaffold creation, so no lockfile has been generated yet.
-
 ## Docs
 
 - [Engineering PRD](docs/engineering-prd.md)
