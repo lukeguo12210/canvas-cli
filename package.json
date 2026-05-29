@@ -1,6 +1,6 @@
 {
   "name": "@lukeguo12210/canvas-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Canvas LMS CLI and AI agent skills bundle for technical students.",
   "type": "module",
   "bin": {

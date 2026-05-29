@@ -19,7 +19,7 @@ Before using this skill, read `../canvas-shared/SKILL.md`.
 - Once a course ID is known, prefer the ID.
 - `canvas context show` is planned but not implemented yet. Until it exists, use `canvas courses list --active --page-all`.
 - Use tabs to understand whether the course is module-heavy, assignment-heavy, file-heavy, or page-heavy.
-- For "pull this class" or "help me study", switch to `canvas-review`, but note that review packs are not implemented yet.
+- For "pull this class" or "help me study", switch to `canvas-review` and use `canvas review pack`.
 
 ## Commands
 

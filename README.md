@@ -35,24 +35,24 @@ Canvas CLI for technical students and AI agents.
 
 ## Status
 
-Early scaffold.
+Student read-only MVP in progress.
 
 Implemented:
 
-- TypeScript/Node package scaffold.
-- `canvas --help` and `canvas version`.
-- Core runtime utilities for output envelopes, redaction, config paths, pagination, and Canvas GET requests.
-- Initial unit tests for the safety-critical runtime.
+- `canvas auth login/status/logout`, `canvas config show`, and `canvas me`.
+- Courses, tabs, modules, assignments, pages, files, folders, raw GET, and review-pack foundation commands.
+- Local JSON/HTML/Markdown exports for modules, assignments, pages, and review packs.
+- Safe file download to a requested output directory.
+- Core runtime utilities for output envelopes, redaction, config paths, pagination, and Canvas GET/download requests.
+- Unit tests for command normalization, routing helpers, and safety-critical runtime.
 - Engineering PRD and executable build plan.
-- Initial Lark-style skill bundle skeleton.
+- Agent skill bundle for the implemented command surface.
 
 Planned next:
 
-- `canvas auth login`.
-- Canvas school picker and PAT setup flow.
 - Post-login context bootstrap.
-- Course/resource commands.
-- Review packs.
+- Broader review-pack indexing, citations, and linked-file resolution.
+- Grades, submissions, discussions, announcements, calendar, groups, and conversations.
 
 ## Installation & Quick Start
 
@@ -74,13 +74,13 @@ npm install -g @lukeguo12210/canvas-cli
 # 1. Authenticate with your Canvas school
 canvas auth login
 
-# 2. Inspect the automatically gathered student context
-canvas context show
-
-# 3. List courses
+# 2. List courses
 canvas courses list
 
-# 4. Build a local review pack
+# 3. Inspect a course
+canvas courses overview <course-id>
+
+# 4. Build a local review pack foundation
 canvas review pack --course-id <course-id> --out ./review/<course>
 ```
 
@@ -97,6 +97,7 @@ npx skills add lukeguo12210/canvas-cli -g --skill "*" -y
 | `canvas-shared` | Auth, token safety, output formats, pagination, raw API usage, common Canvas errors |
 | `canvas-courses` | Course discovery, course name disambiguation, tabs, and overview |
 | `canvas-modules` | Module traversal, module item resolution, Canvas course order |
+| `canvas-pages` | Page listing, page HTML inspection, local page export |
 | `canvas-files` | File metadata, folders, linked files, safe downloads |
 | `canvas-assignments` | Assignments, due dates, descriptions, visible attachments |
 | `canvas-review` | Review-pack workflow that preserves Canvas course structure |
@@ -128,9 +129,8 @@ Personal access tokens are for local/self use. Do not paste tokens into hosted a
 ### Student Workflows
 
 ```bash
-canvas context show
 canvas review pack --course-id <course-id> --out ./review/<course>
-canvas review search --path ./review/<course> --query "dynamic programming"
+canvas review pack --course-id <course-id> --out ./review/<course> --include-all-files
 ```
 
 ### Domain Commands
@@ -139,9 +139,13 @@ canvas review search --path ./review/<course> --query "dynamic programming"
 canvas courses list
 canvas courses search "algorithms"
 canvas modules list --course-id <course-id>
+canvas modules items --course-id <course-id> --module-id <module-id>
 canvas assignments list --course-id <course-id>
+canvas pages list --course-id <course-id>
 canvas pages show --course-id <course-id> --page <url-or-id>
+canvas files list --course-id <course-id>
 canvas files download <file-id> --out ./files
+canvas folders list --course-id <course-id>
 ```
 
 ### Raw Read-Only API
@@ -191,7 +195,7 @@ Near term:
 - Add school registry and custom Canvas URL setup.
 - Add post-login context bootstrap.
 - Implement courses, tabs, modules, assignments, pages, and files.
-- Build `canvas review pack`.
+- Expand `canvas review pack` with citations, indexing, and richer file resolution.
 - Package skills for `npx skills add lukeguo12210/canvas-cli -g --skill "*" -y`.
 
 Later:

@@ -16,7 +16,7 @@ Before using this skill, read `../canvas-shared/SKILL.md`.
 
 Before creating a review pack:
 
-1. Inspect `canvas context show`.
+1. Inspect `canvas courses overview <course-id>`.
 2. Resolve the target course ID.
 3. Use `canvas review pack`.
 
@@ -24,10 +24,7 @@ Before creating a review pack:
 
 ```bash
 canvas review pack --course-id <course-id> --out <dir>
-canvas review pack --course "<course name or code>" --out <dir>
-canvas review pack --course-id <course-id> --module <module-id-or-name> --out <dir>
-canvas review index --path <pack-dir>
-canvas review search --path <pack-dir> --query <query>
+canvas review pack --course-id <course-id> --out <dir> --include-all-files
 ```
 
 ## Review Pack Rules
@@ -38,3 +35,15 @@ canvas review search --path <pack-dir> --query <query>
 - Default excludes grades, submissions, conversations, and group member lists.
 - Record unavailable, locked, external, or skipped resources as warnings.
 - Always cite Canvas source URLs in `citations.json`.
+
+## Current Behavior
+
+The current pack command writes JSON files:
+
+- `manifest.json`
+- `course.json`
+- `modules.json`
+- `assignments.json`
+- `pages.json`
+
+It includes visible course metadata, tabs, modules, assignments, and pages. With `--include-all-files`, it also includes visible file metadata. It does not yet write `citations.json`, build a search index, or download all file bytes.

@@ -30,11 +30,11 @@ Common module item types:
 ## Commands
 
 ```bash
-canvas modules list --course-id <course-id>
-canvas modules list --course-id <course-id> --include items,content_details
-canvas modules items --course-id <course-id> --module-id <module-id>
-canvas modules item --course-id <course-id> --module-id <module-id> --item-id <item-id>
-canvas modules export --course-id <course-id> --module-id <module-id> --out <dir>
+canvas modules list --course-id <course-id> --page-all --format json
+canvas modules list --course-id <course-id> --include items,content_details --page-all --format json
+canvas modules items --course-id <course-id> --module-id <module-id> --page-all --format json
+canvas modules item --course-id <course-id> --module-id <module-id> --item-id <item-id> --format json
+canvas modules export --course-id <course-id> --module-id <module-id> --out <dir> --format json
 ```
 
 ## Notes

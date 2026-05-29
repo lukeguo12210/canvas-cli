@@ -1,12 +1,18 @@
 import { writeOutput } from "../core/output.js";
 import type { OutputFormat } from "../core/output.js";
 import { handleAuthCommand } from "../commands/auth.js";
+import { handleApiCommand } from "../commands/api.js";
+import { handleAssignmentsCommand } from "../commands/assignments.js";
 import { handleConfigCommand } from "../commands/config.js";
 import { handleCoursesCommand } from "../commands/courses.js";
+import { handleFilesCommand, handleFoldersCommand } from "../commands/files.js";
 import { handleMeCommand } from "../commands/me.js";
+import { handleModulesCommand } from "../commands/modules.js";
+import { handlePagesCommand } from "../commands/pages.js";
+import { handleReviewCommand } from "../commands/review.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.1";
+const VERSION = "0.0.2";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.
@@ -20,9 +26,17 @@ COMMANDS:
   auth logout       Remove local Canvas auth config
   config show       Show redacted local config
   me                Show current Canvas user profile
-  context show      Show cached post-login context
   courses list      List active Canvas courses
+  courses overview  Summarize course setup
+  tabs list         List course tabs
+  modules list      List course modules
+  modules items     List module items
+  assignments list  List course assignments
+  pages list        List course pages
+  files list        List course files
+  folders list      List course folders
   review pack       Create a local course review pack
+  api get           Raw read-only Canvas API GET
   version           Print CLI version
 
 FLAGS:
@@ -30,7 +44,8 @@ FLAGS:
   --format <fmt>    Output format: json | pretty | table | ndjson
 
 MVP STATUS:
-  Auth/config/me/courses/tabs are in progress. Review commands are planned next.
+  Read-only student commands are available for auth, courses, tabs, modules,
+  assignments, pages, files, folders, review packs, and raw GET.
 `;
 }
 
@@ -73,6 +88,34 @@ async function main(argv: string[]): Promise<number> {
 
   if (command === "tabs") {
     return handleTabsCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "modules") {
+    return handleModulesCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "assignments") {
+    return handleAssignmentsCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "pages") {
+    return handlePagesCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "files") {
+    return handleFilesCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "folders") {
+    return handleFoldersCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "review") {
+    return handleReviewCommand(parsed.argv.slice(1), { format: parsed.format });
+  }
+
+  if (command === "api") {
+    return handleApiCommand(parsed.argv.slice(1), { format: parsed.format });
   }
 
   await writeOutput(

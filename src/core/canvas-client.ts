@@ -28,6 +28,18 @@ export type CanvasResponse<T> = {
   };
 };
 
+export type CanvasDownload = {
+  data: Uint8Array;
+  contentType?: string;
+  filename?: string;
+  meta: {
+    request: {
+      method: "GET";
+      url: string;
+    };
+  };
+};
+
 export class CanvasClient {
   private readonly baseUrl: string;
   private readonly token: string;
@@ -104,6 +116,41 @@ export class CanvasClient {
       }
     };
   }
+
+  async download(url: string): Promise<CanvasDownload> {
+    const response = await this.fetchImpl(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        Accept: "*/*"
+      }
+    }).catch((error: unknown) => {
+      throw new CanvasCliError("CANVAS_NETWORK_ERROR", "Could not reach Canvas.", {
+        retryable: true,
+        cause: error
+      });
+    });
+
+    if (!response.ok) {
+      throw new CanvasCliError(
+        mapStatusCode(response.status),
+        `Canvas download failed with status ${response.status}.`,
+        { status: response.status, retryable: response.status === 429 || response.status >= 500 }
+      );
+    }
+
+    return {
+      data: new Uint8Array(await response.arrayBuffer()),
+      contentType: response.headers.get("content-type") ?? undefined,
+      filename: filenameFromContentDisposition(response.headers.get("content-disposition")),
+      meta: {
+        request: {
+          method: "GET",
+          url: redactSecrets(url) as string
+        }
+      }
+    };
+  }
 }
 
 export function normalizeBaseUrl(input: string): string {
@@ -164,4 +211,16 @@ function mapStatusCode(status: number): string {
   if (status === 429) return "CANVAS_RATE_LIMITED";
   if (status >= 500) return "CANVAS_SERVER_ERROR";
   return "CANVAS_REQUEST_FAILED";
+}
+
+function filenameFromContentDisposition(header: string | null): string | undefined {
+  if (!header) {
+    return undefined;
+  }
+  const utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(header);
+  if (utf8Match?.[1]) {
+    return decodeURIComponent(utf8Match[1]);
+  }
+  const match = /filename="?([^";]+)"?/i.exec(header);
+  return match?.[1];
 }

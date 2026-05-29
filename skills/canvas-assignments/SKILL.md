@@ -15,11 +15,11 @@ Before using this skill, read `../canvas-shared/SKILL.md`.
 ## Commands
 
 ```bash
-canvas assignments list --course-id <course-id>
-canvas assignments list --course-id <course-id> --bucket upcoming
-canvas assignments show --course-id <course-id> --assignment-id <assignment-id>
-canvas assignments export --course-id <course-id> --assignment-id <assignment-id> --out <dir>
-canvas assignment-groups list --course-id <course-id>
+canvas assignments list --course-id <course-id> --page-all --format json
+canvas assignments list --course-id <course-id> --bucket upcoming --format json
+canvas assignments list --course-id <course-id> --search "project" --format json
+canvas assignments show --course-id <course-id> --assignment-id <assignment-id> --format json
+canvas assignments export --course-id <course-id> --assignment-id <assignment-id> --out <dir> --format json
 ```
 
 ## Notes
@@ -28,3 +28,4 @@ canvas assignment-groups list --course-id <course-id>
 - Due dates may be overridden per student; use Canvas-returned dates as authoritative.
 - Submission data is sensitive and should not be part of default review workflows.
 - External tools should be linked, not scraped.
+- Assignment groups are planned but not implemented yet. Do not call `canvas assignment-groups`.

@@ -56,13 +56,18 @@ Implemented now:
 - `canvas courses show <course-id>`
 - `canvas courses overview <course-id>`
 - `canvas tabs list --course-id <course-id>`
+- `canvas review pack`
+- `canvas api get`
+- `canvas modules list/items/item/export`
+- `canvas assignments list/show/export`
+- `canvas pages list/show/export`
+- `canvas files list/show/download/download-linked`
+- `canvas folders list/path`
 
 Planned but not implemented yet:
 
 - `canvas context show`
-- `canvas review pack`
-- `canvas api get`
-- modules, pages, files, assignments, grades, submissions, discussions, calendar, groups, conversations
+- grades, submissions, discussions, calendar, groups, conversations
 
 ## Core Rules
 
@@ -109,4 +114,5 @@ Do not include those in review packs unless the user explicitly asks.
 canvas auth status --format json
 canvas courses list --active --page-all --format json
 canvas courses search "course name" --format json
+canvas courses overview <course-id> --format json
 ```

@@ -25,8 +25,28 @@ export function flagValue(argv: string[], flag: string): string | undefined {
   return argv[index + 1];
 }
 
+export function requiredFlag(argv: string[], flag: string, usage: string): string {
+  const value = flagValue(argv, flag);
+  if (!value) {
+    throw new Error(usage);
+  }
+  return value;
+}
+
 export function hasFlag(argv: string[], flag: string): boolean {
   return argv.includes(flag);
+}
+
+export function csvFlag(argv: string[], flag: string): string[] | undefined {
+  const raw = flagValue(argv, flag);
+  if (!raw) {
+    return undefined;
+  }
+  const values = raw
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return values.length > 0 ? values : undefined;
 }
 
 export function pageOptions(argv: string[]): { pageAll: boolean; pageLimit?: number } {
@@ -55,7 +75,15 @@ export function positionalArgs(argv: string[]): string[] {
     "--enrollment-state",
     "--state",
     "--include",
-    "--params"
+    "--params",
+    "--bucket",
+    "--search",
+    "--order-by",
+    "--sort",
+    "--file-id",
+    "--folder-id",
+    "--group-id",
+    "--content-type"
   ]);
   const values: string[] = [];
   for (let index = 0; index < argv.length; index += 1) {
