@@ -193,6 +193,7 @@ canvas api get /api/v1/courses
 canvas api get /api/v1/courses/<course-id>/modules --params '{"include":["items"]}'
 
 canvas skills install
+canvas install-skills
 canvas skills command
 canvas skills status
 ```

@@ -74,6 +74,7 @@ Implemented now:
 - `canvas files list/show/download/download-linked`
 - `canvas folders list/path`
 - `canvas skills install/command/status`
+- `canvas install-skills`
 
 Planned but not implemented yet:
 

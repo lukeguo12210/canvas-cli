@@ -24,6 +24,10 @@ export async function handleSkillsCommand(
   const [subcommand] = argv;
 
   try {
+    if (!subcommand || subcommand === "--help" || subcommand === "-h" || subcommand === "help") {
+      process.stdout.write(skillsHelpText());
+      return 0;
+    }
     if (subcommand === "install") {
       return await installSkills(argv.slice(1), options);
     }
@@ -142,4 +146,24 @@ function run(command: string, args: readonly string[]): Promise<number> {
     child.on("close", (code) => resolve(code ?? 1));
     child.on("error", () => resolve(1));
   });
+}
+
+export function skillsHelpText(): string {
+  return `canvas skills — install and inspect Canvas agent skills.
+
+USAGE:
+  canvas skills <command> [options]
+
+COMMANDS:
+  install           Install or update all Canvas agent skills
+  install --dry-run Print the install command without running it
+  command           Print the direct npx skills install command
+  status            Show bundled skill names and install command
+
+ALIASES:
+  canvas install-skills
+
+DIRECT INSTALLER:
+  ${SKILLS_INSTALL_DISPLAY_COMMAND}
+`;
 }

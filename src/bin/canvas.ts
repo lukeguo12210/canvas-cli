@@ -13,7 +13,7 @@ import { handleReviewCommand } from "../commands/review.js";
 import { handleSkillsCommand } from "../commands/skills.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.5";
+const VERSION = "0.0.6";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.
@@ -40,6 +40,7 @@ COMMANDS:
   review pack       Create a local course review pack
   api get           Raw read-only Canvas API GET
   skills install    Install/update bundled agent skills
+  install-skills    Alias for skills install
   version           Print CLI version
 
 FLAGS:
@@ -121,8 +122,9 @@ async function main(argv: string[]): Promise<number> {
     return handleApiCommand(parsed.argv.slice(1), { format: parsed.format });
   }
 
-  if (command === "skills") {
-    return handleSkillsCommand(parsed.argv.slice(1), { format: parsed.format });
+  if (command === "skills" || command === "install-skills") {
+    const skillsArgv = command === "install-skills" ? ["install", ...parsed.argv.slice(1)] : parsed.argv.slice(1);
+    return handleSkillsCommand(skillsArgv, { format: parsed.format });
   }
 
   await writeOutput(

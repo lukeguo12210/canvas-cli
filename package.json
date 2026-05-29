@@ -1,6 +1,6 @@
 {
   "name": "@lukeguo12210/canvas-cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Connect Canvas courses to AI agents: pull modules, files, assignments, pages, folders, and review packs without manual downloads.",
   "type": "module",
   "bin": {
