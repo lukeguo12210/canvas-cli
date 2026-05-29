@@ -164,15 +164,40 @@ async function authLogout(options: { format: OutputFormat }): Promise<number> {
   return 0;
 }
 
-async function chooseSchool(io: PromptIO): Promise<School> {
-  process.stdout.write("Search for your school, or press Enter to browse the first matches.\n");
+export async function chooseSchool(
+  io: PromptIO,
+  write: (message: string) => void = (message) => process.stdout.write(message)
+): Promise<School> {
+  write("Search for your school, or press Enter to browse the first matches.\n");
   const query = await io.question("School: ");
   const matches = searchSchools(query);
 
-  for (const [index, school] of matches.entries()) {
-    process.stdout.write(`${index + 1}. ${school.name}\n   ${school.url}\n`);
+  if (matches.length === 1) {
+    const school = matches[0];
+    const answer = (
+      await io.question(`Is this your school: ${school.name} (${school.url})? Choose: y/n `)
+    )
+      .trim()
+      .toLowerCase();
+
+    if (answer === "y" || answer === "yes") {
+      return {
+        name: school.name,
+        url: normalizeBaseUrl(school.url)
+      };
+    }
+
+    if (answer === "n" || answer === "no") {
+      return promptCustomSchool(io);
+    }
+
+    throw new CanvasCliError("INVALID_SELECTION", "Please answer y or n.");
   }
-  process.stdout.write(`${matches.length + 1}. Not found? Add your own\n`);
+
+  for (const [index, school] of matches.entries()) {
+    write(`${index + 1}. ${school.name}\n   ${school.url}\n`);
+  }
+  write(`${matches.length + 1}. Not found? Add your own\n`);
 
   const selected = Number.parseInt(await io.question("Choose: "), 10);
   if (!Number.isFinite(selected) || selected < 1 || selected > matches.length + 1) {
@@ -180,9 +205,7 @@ async function chooseSchool(io: PromptIO): Promise<School> {
   }
 
   if (selected === matches.length + 1) {
-    const name = await io.question("School display name: ");
-    const url = await io.question("Canvas base URL: ");
-    return makeCustomSchool(name, url);
+    return promptCustomSchool(io);
   }
 
   const school = matches[selected - 1];
@@ -190,6 +213,12 @@ async function chooseSchool(io: PromptIO): Promise<School> {
     name: school.name,
     url: normalizeBaseUrl(school.url)
   };
+}
+
+async function promptCustomSchool(io: PromptIO): Promise<School> {
+  const name = await io.question("School display name: ");
+  const url = await io.question("Canvas base URL: ");
+  return makeCustomSchool(name, url);
 }
 
 function tokenInstructions(school: School, settingsUrl: string): string {
