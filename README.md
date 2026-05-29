@@ -6,8 +6,6 @@ Canvas CLI for technical students and AI agents.
 
 `canvas-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
 
-Inspired by [`larksuite/cli`](https://github.com/larksuite/cli), this project is designed as a bundle: CLI + agent skills + practical workflows.
-
 [Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [Roadmap](#roadmap)
 
 ## Why canvas-cli?
