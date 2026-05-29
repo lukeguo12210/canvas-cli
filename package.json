@@ -9,11 +9,13 @@
   "files": [
     "dist",
     "skills",
+    "scripts/postinstall.mjs",
     "README.md"
   ],
   "scripts": {
     "dev": "tsx src/bin/canvas.ts",
     "build": "tsup",
+    "postinstall": "node ./scripts/postinstall.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
