@@ -1,14 +1,14 @@
-# canvas-lms-cli
+# @lukeguo12210/canvas-lms-cli
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-yellow.svg)](LICENSE)
 
 Canvas CLI for technical students and AI agents.
 
-`canvas-lms-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
+`@lukeguo12210/canvas-lms-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
 
 [Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [License](#license) · [Roadmap](#roadmap)
 
-## Why canvas-lms-cli?
+## Why @lukeguo12210/canvas-lms-cli?
 
 - **Built for technical students** — bring Canvas into your terminal, scripts, and local AI workflow.
 - **Agent-native design** — structured skills teach agents Canvas auth, pagination, course structure, and study workflows.
@@ -65,7 +65,7 @@ Planned next:
 ### Install
 
 ```bash
-npm install -g canvas-lms-cli
+npm install -g @lukeguo12210/canvas-lms-cli
 ```
 
 ### Use
@@ -87,7 +87,7 @@ canvas review pack --course-id <course-id> --out ./review/<course>
 ### Install Agent Skills
 
 ```bash
-npx skills add canvas-lms-cli -g -y
+npx skills add @lukeguo12210/canvas-lms-cli -g -y
 ```
 
 ## Agent Skills
@@ -123,7 +123,7 @@ Personal access tokens are for local/self use. Do not paste tokens into hosted a
 
 ## Command System
 
-`canvas-lms-cli` uses a simple Canvas-native command system.
+`@lukeguo12210/canvas-lms-cli` uses a simple Canvas-native command system.
 
 ### Student Workflows
 
@@ -173,7 +173,7 @@ MVP raw API access is GET-only.
 
 ## License
 
-`canvas-lms-cli` is source-available under the Business Source License 1.1.
+`@lukeguo12210/canvas-lms-cli` is source-available under the Business Source License 1.1.
 
 Personal, educational, research, academic, non-commercial, and internal evaluation use is permitted. Commercial hosted services, managed services, paid integrations, or competing product offerings require a separate commercial license until the Change Date.
 
@@ -192,7 +192,7 @@ Near term:
 - Add post-login context bootstrap.
 - Implement courses, tabs, modules, assignments, pages, and files.
 - Build `canvas review pack`.
-- Package skills for `npx skills add canvas-lms-cli -g -y`.
+- Package skills for `npx skills add @lukeguo12210/canvas-lms-cli -g -y`.
 
 Later:
 
