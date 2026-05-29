@@ -727,7 +727,7 @@ Build steps:
 4. Support canonical skill install:
 
 ```bash
-npx skills add @lukeguo12210/canvas-lms-cli -g -y
+npx skills add @lukeguo12210/canvas-cli -g -y
 ```
 
 5. Optional fallback:
@@ -741,7 +741,7 @@ canvas skills install --target claude
 
 6. Confirm npm package name:
 
-- `@lukeguo12210/canvas-lms-cli`
+- `@lukeguo12210/canvas-cli`
 
 7. Add README install docs.
 8. Add license.
@@ -750,12 +750,12 @@ canvas skills install --target claude
 11. Add examples:
 
 ```bash
-npm install -g @lukeguo12210/canvas-lms-cli
+npm install -g @lukeguo12210/canvas-cli
 canvas auth login
 canvas context show
 canvas courses list
 canvas review pack --course-id <id> --out ./review/<course>
-npx skills add @lukeguo12210/canvas-lms-cli -g -y
+npx skills add @lukeguo12210/canvas-cli -g -y
 ```
 
 12. Add CI:
