@@ -6,7 +6,7 @@ import { handleCoursesCommand } from "../commands/courses.js";
 import { handleMeCommand } from "../commands/me.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.0";
+const VERSION = "0.0.1";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.

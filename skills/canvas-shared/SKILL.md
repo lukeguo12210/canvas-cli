@@ -12,6 +12,36 @@ metadata:
 
 Read this skill before using any other Canvas skill.
 
+## CLI Availability
+
+First try:
+
+```bash
+canvas auth status --format json
+```
+
+If the shell returns `command not found: canvas`, the CLI is not on `PATH`.
+
+Use this non-global fallback inside an agent session:
+
+```bash
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth status --format json
+```
+
+When using the fallback, replace the leading `canvas` in any command with:
+
+```bash
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas
+```
+
+For permanent install, tell the user:
+
+```bash
+npm install -g @lukeguo12210/canvas-cli
+```
+
+If global install fails with `EACCES` under `/usr/local`, do not use `sudo` or create symlinks in `/usr/local`. Ask the user to configure a user-level npm prefix, use a Node version manager, or continue with the `npm exec` fallback for this session.
+
 ## Current CLI Surface
 
 Implemented now:

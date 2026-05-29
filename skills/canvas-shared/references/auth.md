@@ -10,6 +10,15 @@ canvas config show --format json
 canvas me --format json
 ```
 
+If `canvas` is not on `PATH`, use the npm exec fallback:
+
+```bash
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth status --format json
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth login
+```
+
+Do not attempt `sudo npm install -g` from inside an agent session. Prefer the fallback above or ask the user to fix their npm global prefix.
+
 ## Login Flow
 
 `canvas auth login` is interactive.
