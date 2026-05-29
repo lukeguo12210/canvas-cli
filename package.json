@@ -1,0 +1,39 @@
+{
+  "name": "canvas-cli",
+  "version": "0.0.0",
+  "description": "Agent-native Canvas LMS CLI and skills bundle for students.",
+  "type": "module",
+  "bin": {
+    "canvas": "dist/bin/canvas.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "tsx src/bin/canvas.ts",
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "canvas",
+    "canvas-lms",
+    "cli",
+    "agents",
+    "skills"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
