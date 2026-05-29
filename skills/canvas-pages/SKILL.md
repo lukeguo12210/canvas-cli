@@ -26,3 +26,4 @@ canvas pages export --course-id <course-id> --page <page-url> --out <dir> --form
 - Canvas page identifiers are usually URL slugs such as `syllabus`, not numeric IDs.
 - Page bodies are Canvas HTML. Preserve the original HTML in exports.
 - Locked pages should be reported as locked, not treated as fatal when traversing a whole course.
+- `CANVAS_NOT_FOUND` from `pages list` often means the course does not expose Canvas Pages. Treat it as "pages unavailable" and continue checking modules, assignments, files, or tabs.

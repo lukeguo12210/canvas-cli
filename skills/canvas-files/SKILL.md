@@ -39,3 +39,4 @@ canvas folders path --course-id <course-id> --path <path> --format json
 - `files download` writes one file to the requested output directory.
 - `files download-linked` currently downloads file IDs discoverable from module file items and assignment attachments when Canvas exposes them.
 - Folder commands are separate top-level commands: use `canvas folders ...`, not `canvas files folders ...`.
+- Do not skip file checks just because pages or modules are unavailable. Run `canvas files list` as its own command.

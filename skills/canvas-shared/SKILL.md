@@ -92,6 +92,8 @@ Planned but not implemented yet:
 - Use `--format pretty` only when presenting a compact human-facing result.
 - Use `--page-all` when completeness matters.
 - Canvas pagination follows `Link` headers; do not synthesize next-page URLs.
+- Treat optional course surfaces independently. Pages, Files, Modules, Assignments, and external tools may be hidden or disabled per course.
+- Do not chain optional probes with `&&`; a `CANVAS_NOT_FOUND` from one surface should not stop the next probe.
 - MVP cannot write to Canvas.
 - Do not pretend planned commands exist. If a command is marked planned, say it is not implemented yet.
 

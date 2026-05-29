@@ -20,6 +20,7 @@ Before using this skill, read `../canvas-shared/SKILL.md`.
 - `canvas context show` is planned but not implemented yet. Until it exists, use `canvas courses list --active --page-all`.
 - Use tabs to understand whether the course is module-heavy, assignment-heavy, file-heavy, or page-heavy.
 - For "pull this class" or "help me study", switch to `canvas-review` and use `canvas review pack`.
+- For "what am I learning", inspect `courses overview`, then independently probe visible/likely surfaces such as modules, assignments, pages, and files. Continue if one optional surface returns `CANVAS_NOT_FOUND`.
 
 ## Commands
 
@@ -99,6 +100,16 @@ Tabs help agents infer course structure:
 - `files`: course exposes a file library.
 - `pages` or `wiki`: course may use pages outside modules.
 - external tool tabs should be linked but not scraped.
+
+Do not run optional probes as one `&&` chain. Prefer separate calls:
+
+```bash
+canvas pages list --course-id <course-id> --format json
+canvas files list --course-id <course-id> --format json
+canvas assignments list --course-id <course-id> --page-all --format json
+```
+
+If one returns `CANVAS_NOT_FOUND`, say that surface is unavailable and continue with the others.
 
 ## Output Notes
 
