@@ -13,13 +13,21 @@ canvas config show --format json
 canvas me --format json
 ```
 
-If `canvas` is not on `PATH`, use the npm exec fallback:
+Resolve the CLI command once per session:
+
+```bash
+command -v canvas
+```
+
+If `canvas` is not on `PATH`, use the npm exec fallback prefix for the rest of the session:
 
 ```bash
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth status --format json
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth login
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
 ```
+
+Do not run repeated compound commands like `canvas ... || npm exec ...`. Pick either `canvas` or the npm exec prefix and use it consistently.
 
 Do not attempt `sudo npm install -g` from inside an agent session. Prefer the fallback above or ask the user to fix their npm global prefix.
 

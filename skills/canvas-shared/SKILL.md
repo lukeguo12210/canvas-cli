@@ -14,24 +14,32 @@ Read this skill before using any other Canvas skill.
 
 ## CLI Availability
 
-First try:
+Resolve the CLI command once per session:
+
+```bash
+command -v canvas
+```
+
+If this succeeds, use plain `canvas ...` commands for the rest of the session.
+
+If this fails, use this non-global fallback prefix for the rest of the session:
+
+```bash
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas
+```
+
+Do not wrap every command in `canvas ... || npm exec ...`; it is noisy and can make agents wait on npm repeatedly. Pick one command prefix, then run the requested Canvas command once.
+
+Check auth after the command prefix is resolved:
 
 ```bash
 canvas auth status --format json
 ```
 
-If the shell returns `command not found: canvas`, the CLI is not on `PATH`.
-
-Use this non-global fallback inside an agent session:
+or:
 
 ```bash
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth status --format json
-```
-
-When using the fallback, replace the leading `canvas` in any command with:
-
-```bash
-npm exec --yes --package @lukeguo12210/canvas-cli -- canvas
 ```
 
 For permanent install, tell the user:
