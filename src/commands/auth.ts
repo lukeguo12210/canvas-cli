@@ -17,6 +17,11 @@ export async function handleAuthCommand(
 ): Promise<number> {
   const [subcommand] = argv;
 
+  if (!subcommand || subcommand === "--help" || subcommand === "-h" || subcommand === "help") {
+    process.stdout.write(authHelpText());
+    return 0;
+  }
+
   if (subcommand === "login") {
     return authLogin(argv.slice(1), options);
   }
@@ -45,6 +50,32 @@ export async function handleAuthCommand(
     options
   );
   return 1;
+}
+
+export function authHelpText(): string {
+  return `canvas auth — authenticate and inspect Canvas login state.
+
+USAGE:
+  canvas auth <command> [options]
+
+COMMANDS:
+  login                    Interactive Canvas PAT setup
+  login --school <query>   Non-interactive login with a school search
+  login --school-url <url> Non-interactive login with a custom Canvas URL
+  schools search <query>   Search supported Canvas school URLs
+  status                   Show redacted auth status
+  logout                   Remove local Canvas auth config
+
+TOKEN OPTIONS:
+  --token <PAT>            Use a token provided by the user
+  --token-env <ENV>        Read token from an environment variable
+  --token-stdin            Read token from stdin
+
+EXAMPLES:
+  canvas auth schools search "Berkeley" --format json
+  canvas auth login --school "Berkeley" --token-env CANVAS_TOKEN
+  canvas auth login --school-url https://bcourses.berkeley.edu --school-name "UC Berkeley" --token "paste-token-here"
+`;
 }
 
 async function authLogin(argv: string[], options: { format: OutputFormat }): Promise<number> {

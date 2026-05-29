@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chooseSchool, resolveSchoolFromArgs, tokenFromArgs } from "./auth.js";
+import { authHelpText, chooseSchool, resolveSchoolFromArgs, tokenFromArgs } from "./auth.js";
 import type { PromptIO } from "../core/prompt.js";
 
 describe("chooseSchool", () => {
@@ -19,6 +19,13 @@ describe("chooseSchool", () => {
       name: "My School",
       url: "https://canvas.example.edu"
     });
+  });
+});
+
+describe("authHelpText", () => {
+  it("documents non-interactive school search", () => {
+    expect(authHelpText()).toContain('canvas auth schools search "Berkeley"');
+    expect(authHelpText()).toContain("--token-env");
   });
 });
 

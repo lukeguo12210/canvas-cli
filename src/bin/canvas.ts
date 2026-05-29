@@ -13,7 +13,7 @@ import { handleReviewCommand } from "../commands/review.js";
 import { handleSkillsCommand } from "../commands/skills.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.6";
+const VERSION = "0.0.7";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.
