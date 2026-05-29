@@ -1,12 +1,12 @@
 # canvas-cli
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-yellow.svg)](LICENSE)
 
 Canvas CLI for technical students and AI agents.
 
 `canvas-cli` turns Canvas LMS into a local, scriptable, agent-readable workspace. It is built for students who already live in terminals, editors, notebooks, and AI coding tools. Use the `canvas` command directly, or install the bundled skills so Codex, Claude Code, and other local agents can authenticate, understand your courses, pull materials, inspect upcoming work, and build review packs.
 
-[Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [Roadmap](#roadmap)
+[Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [License](#license) · [Roadmap](#roadmap)
 
 ## Why canvas-cli?
 
@@ -170,6 +170,18 @@ MVP raw API access is GET-only.
 - Review packs exclude grades, submissions, conversations, and group member lists by default.
 - Downloads are constrained to the requested output directory.
 - Pagination follows Canvas `Link` headers instead of guessing URLs.
+
+## License
+
+`canvas-cli` is source-available under the Business Source License 1.1.
+
+Personal, educational, research, academic, non-commercial, and internal evaluation use is permitted. Commercial hosted services, managed services, paid integrations, or competing product offerings require a separate commercial license until the Change Date.
+
+Change Date: May 29, 2030.
+
+Change License: GNU Affero General Public License v3.0 or later.
+
+See [LICENSE](LICENSE).
 
 ## Roadmap
 

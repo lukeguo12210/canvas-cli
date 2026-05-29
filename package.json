@@ -30,7 +30,7 @@
     "students",
     "education"
   ],
-  "license": "MIT",
+  "license": "BUSL-1.1",
   "devDependencies": {
     "@types/node": "^24.0.0",
     "tsup": "^8.3.5",
