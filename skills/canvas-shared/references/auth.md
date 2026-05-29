@@ -4,6 +4,9 @@ Implemented auth commands:
 
 ```bash
 canvas auth login
+canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
+canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token "paste-token-here"
+canvas auth schools search "Columbia" --format json
 canvas auth status --format json
 canvas auth logout
 canvas config show --format json
@@ -15,11 +18,49 @@ If `canvas` is not on `PATH`, use the npm exec fallback:
 ```bash
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth status --format json
 npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth login
+npm exec --yes --package @lukeguo12210/canvas-cli -- canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
 ```
 
 Do not attempt `sudo npm install -g` from inside an agent session. Prefer the fallback above or ask the user to fix their npm global prefix.
 
-## Login Flow
+## Agent Login Flow
+
+Agents can complete login non-interactively when the user explicitly provides a Canvas PAT.
+
+1. Search schools:
+
+```bash
+canvas auth schools search "Columbia" --format json
+```
+
+2. Login with a known school match:
+
+```bash
+canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
+```
+
+or, if the user provides the token directly in chat:
+
+```bash
+canvas auth login --school "Columbia" --token "paste-token-here"
+```
+
+3. For a custom Canvas URL:
+
+```bash
+canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token-env CANVAS_TOKEN
+```
+
+4. Verify:
+
+```bash
+canvas auth status --format json
+canvas courses list --active --page-all --format json
+```
+
+If `--school` matches multiple schools, run `canvas auth schools search <query>` and retry with a more specific value or use `--school-url`.
+
+## Interactive Login Flow
 
 `canvas auth login` is interactive.
 
@@ -40,9 +81,15 @@ Is this your school: Columbia University (CourseWorks) (https://courseworks2.col
 8. Validate token.
 9. Store local config.
 
-## Token Safety
+## Token Handling
 
-Never ask the user to paste a token into chat. The token should be pasted into the local terminal prompt from `canvas auth login`.
+The CLI supports agent-provided PATs for initial setup:
+
+- `--token <PAT>`: direct token argument.
+- `--token-env <ENV_NAME>`: read token from an environment variable.
+- `--token-stdin`: read token from stdin.
+
+Prefer `--token-env` or `--token-stdin` when possible. If the user pastes a PAT into chat, use it only for `canvas auth login`, then do not repeat, print, summarize, or store it anywhere except the Canvas config written by the CLI.
 
 Never print:
 

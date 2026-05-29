@@ -83,7 +83,15 @@ export function positionalArgs(argv: string[]): string[] {
     "--file-id",
     "--folder-id",
     "--group-id",
-    "--content-type"
+    "--content-type",
+    "--school",
+    "--school-query",
+    "--school-url",
+    "--url",
+    "--school-name",
+    "--name",
+    "--token",
+    "--token-env"
   ]);
   const values: string[] = [];
   for (let index = 0; index < argv.length; index += 1) {

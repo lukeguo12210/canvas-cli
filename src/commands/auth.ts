@@ -7,6 +7,7 @@ import { openBrowser } from "../core/browser.js";
 import { createPrompt, promptHidden, type PromptIO } from "../core/prompt.js";
 import { makeCustomSchool, searchSchools, type School } from "../registry/schools.js";
 import { runPostLoginBootstrap } from "../workflows/context-bootstrap.js";
+import { flagValue, positionalArgs } from "./shared.js";
 
 const TOKEN_PURPOSE = "Hyperknow";
 
@@ -17,11 +18,15 @@ export async function handleAuthCommand(
   const [subcommand] = argv;
 
   if (subcommand === "login") {
-    return authLogin(options);
+    return authLogin(argv.slice(1), options);
   }
 
   if (subcommand === "status") {
     return authStatus(options);
+  }
+
+  if (subcommand === "schools") {
+    return authSchools(argv.slice(1), options);
   }
 
   if (subcommand === "logout") {
@@ -42,19 +47,25 @@ export async function handleAuthCommand(
   return 1;
 }
 
-async function authLogin(options: { format: OutputFormat }): Promise<number> {
+async function authLogin(argv: string[], options: { format: OutputFormat }): Promise<number> {
   const io = createPrompt();
 
   try {
-    const school = await chooseSchool(io);
+    const nonInteractive = hasNonInteractiveLoginArgs(argv);
+    const school = nonInteractive ? resolveSchoolFromArgs(argv) : await chooseSchool(io);
     const settingsUrl = `${school.url}/profile/settings`;
 
-    process.stdout.write(tokenInstructions(school, settingsUrl));
-    await io.question("Press Enter to open Canvas settings in your browser...");
-    await openBrowser(settingsUrl);
-    process.stdout.write("\nWaiting for your Canvas personal access token.\n");
+    const providedToken = await tokenFromArgs(argv);
+    let token = providedToken;
 
-    const token = await promptHidden("Paste token: ");
+    if (!token) {
+      process.stdout.write(tokenInstructions(school, settingsUrl));
+      await io.question("Press Enter to open Canvas settings in your browser...");
+      await openBrowser(settingsUrl);
+      process.stdout.write("\nWaiting for your Canvas personal access token.\n");
+      token = await promptHidden("Paste token: ");
+    }
+
     if (!token) {
       throw new CanvasCliError("EMPTY_TOKEN", "No token entered.");
     }
@@ -91,7 +102,7 @@ async function authLogin(options: { format: OutputFormat }): Promise<number> {
           },
           user,
           contextBootstrap: bootstrap,
-          next: "canvas context show"
+          next: "canvas courses list --active --page-all"
         },
         meta: {
           command: "auth login"
@@ -106,6 +117,30 @@ async function authLogin(options: { format: OutputFormat }): Promise<number> {
   } finally {
     io.close();
   }
+}
+
+async function authSchools(argv: string[], options: { format: OutputFormat }): Promise<number> {
+  const [subcommand] = argv;
+  const query =
+    subcommand === "search"
+      ? positionalArgs(argv.slice(1)).join(" ")
+      : flagValue(argv, "--query") ?? positionalArgs(argv).join(" ");
+
+  await writeOutput(
+    {
+      ok: true,
+      data: searchSchools(query).map((school) => ({
+        name: school.name,
+        baseUrl: school.url
+      })),
+      meta: {
+        command: "auth schools",
+        query
+      }
+    },
+    options
+  );
+  return 0;
 }
 
 async function authStatus(options: { format: OutputFormat }): Promise<number> {
@@ -215,10 +250,94 @@ export async function chooseSchool(
   };
 }
 
+export function resolveSchoolFromArgs(argv: string[]): School {
+  const schoolUrl = flagValue(argv, "--school-url") ?? flagValue(argv, "--url");
+  if (schoolUrl) {
+    return makeCustomSchool(flagValue(argv, "--school-name") ?? flagValue(argv, "--name") ?? "Custom Canvas School", schoolUrl);
+  }
+
+  const schoolQuery = flagValue(argv, "--school") ?? flagValue(argv, "--school-query");
+  if (!schoolQuery) {
+    throw new CanvasCliError(
+      "MISSING_SCHOOL",
+      "Non-interactive auth requires --school <query> or --school-url <url>."
+    );
+  }
+
+  const matches = searchSchools(schoolQuery, 20);
+  if (matches.length === 0) {
+    throw new CanvasCliError(
+      "SCHOOL_NOT_FOUND",
+      `No Canvas school matched "${schoolQuery}". Use --school-url <url> for a custom Canvas URL.`
+    );
+  }
+
+  const exact = matches.find((school) => {
+    return school.name.toLowerCase() === schoolQuery.toLowerCase() || school.url.toLowerCase() === schoolQuery.toLowerCase();
+  });
+
+  if (exact) {
+    return {
+      name: exact.name,
+      url: normalizeBaseUrl(exact.url)
+    };
+  }
+
+  if (matches.length === 1) {
+    const school = matches[0];
+    return {
+      name: school.name,
+      url: normalizeBaseUrl(school.url)
+    };
+  }
+
+  throw new CanvasCliError(
+    "AMBIGUOUS_SCHOOL",
+    `Multiple schools matched "${schoolQuery}": ${matches
+      .map((school) => `${school.name} (${school.url})`)
+      .join("; ")}. Use a more specific --school value or --school-url.`
+  );
+}
+
+export async function tokenFromArgs(argv: string[]): Promise<string | undefined> {
+  const directToken = flagValue(argv, "--token");
+  if (directToken) {
+    return directToken.trim();
+  }
+
+  const envName = flagValue(argv, "--token-env");
+  if (envName) {
+    return process.env[envName]?.trim();
+  }
+
+  if (argv.includes("--token-stdin")) {
+    return readStdin().then((value) => value.trim());
+  }
+
+  return undefined;
+}
+
 async function promptCustomSchool(io: PromptIO): Promise<School> {
   const name = await io.question("School display name: ");
   const url = await io.question("Canvas base URL: ");
   return makeCustomSchool(name, url);
+}
+
+function hasNonInteractiveLoginArgs(argv: string[]): boolean {
+  return Boolean(
+    flagValue(argv, "--school") ||
+      flagValue(argv, "--school-query") ||
+      flagValue(argv, "--school-url") ||
+      flagValue(argv, "--url")
+  );
+}
+
+async function readStdin(): Promise<string> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 function tokenInstructions(school: School, settingsUrl: string): string {

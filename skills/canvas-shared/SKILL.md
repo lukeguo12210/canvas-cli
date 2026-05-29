@@ -48,6 +48,7 @@ Implemented now:
 
 - `canvas auth login`
 - `canvas auth status`
+- `canvas auth schools search <query>`
 - `canvas auth logout`
 - `canvas config show`
 - `canvas me`
@@ -72,8 +73,8 @@ Planned but not implemented yet:
 ## Core Rules
 
 - Use `canvas auth status` first if auth state is uncertain.
-- If no auth config exists, ask the user to run `canvas auth login`.
-- Never print, paste, summarize, or expose a Canvas personal access token.
+- If no auth config exists, use `canvas auth schools search <query>` and then `canvas auth login --school <query> --token-env <env>` or `canvas auth login --school <query> --token <token>` when the user explicitly provides a PAT.
+- Never print, paste, summarize, or expose a Canvas personal access token after receiving it.
 - Default output is JSON and should be preferred for agents.
 - Use `--format pretty` only when presenting a compact human-facing result.
 - Use `--page-all` when completeness matters.
@@ -112,6 +113,7 @@ Do not include those in review packs unless the user explicitly asks.
 
 ```bash
 canvas auth status --format json
+canvas auth schools search "Columbia" --format json
 canvas courses list --active --page-all --format json
 canvas courses search "course name" --format json
 canvas courses overview <course-id> --format json

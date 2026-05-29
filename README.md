@@ -78,6 +78,10 @@ npm install -g @lukeguo12210/canvas-cli
 # 1. Authenticate with your Canvas school
 canvas auth login
 
+# Agent/non-interactive auth
+canvas auth schools search "Columbia"
+canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
+
 # 2. List courses
 canvas courses list
 
@@ -141,6 +145,9 @@ canvas review pack --course-id <course-id> --out ./review/<course> --include-all
 
 ```bash
 canvas auth login
+canvas auth login --school "Columbia" --token-env CANVAS_TOKEN
+canvas auth login --school-url https://courseworks2.columbia.edu --school-name "Columbia University (CourseWorks)" --token "paste-token-here"
+canvas auth schools search "Columbia"
 canvas auth status
 canvas auth logout
 canvas config show

@@ -12,7 +12,7 @@ import { handlePagesCommand } from "../commands/pages.js";
 import { handleReviewCommand } from "../commands/review.js";
 import { handleTabsCommand } from "../commands/tabs.js";
 
-const VERSION = "0.0.3";
+const VERSION = "0.0.4";
 
 function helpText(): string {
   return `canvas — Canvas LMS CLI for students and agents.
@@ -23,6 +23,7 @@ USAGE:
 COMMANDS:
   auth login        Interactive Canvas PAT setup
   auth status       Show redacted auth status
+  auth schools      Search supported Canvas school URLs
   auth logout       Remove local Canvas auth config
   config show       Show redacted local config
   me                Show current Canvas user profile
