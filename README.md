@@ -1,14 +1,14 @@
-# @lukeguo12210/canvas-cli
+# canvas-cli
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-yellow.svg)](LICENSE)
 
 Connect Canvas courses to AI agents.
 
-`@lukeguo12210/canvas-cli` turns Canvas LMS into an agent-readable course workspace. Today, students dig through Canvas, download slides, find assignments, copy pages, and upload everything back into LLMs. Canvas CLI makes that one workflow: pull course materials, modules, files, assignments, pages, folders, and review packs into a structure AI agents can immediately understand.
+`canvas-cli` turns Canvas LMS into an agent-readable course workspace. Today, students dig through Canvas, download slides, find assignments, copy pages, and upload everything back into LLMs. Canvas CLI makes that one workflow: pull course materials, modules, files, assignments, pages, folders, and review packs into a structure AI agents can immediately understand.
 
 [Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [License](#license) · [Roadmap](#roadmap)
 
-## Why @lukeguo12210/canvas-cli?
+## Why canvas-cli?
 
 - **Built for technical students** — bring Canvas into your terminal, scripts, and AI workflow.
 - **Agent-native design** — structured skills teach agents Canvas auth, pagination, course structure, and study workflows.
@@ -139,7 +139,7 @@ canvas auth login --school "Berkeley" --token "paste-token-here"
 
 ## Command System
 
-`@lukeguo12210/canvas-cli` uses a simple Canvas-native command system.
+`canvas-cli` uses a simple Canvas-native command system.
 
 ### Student Workflows
 
@@ -222,7 +222,7 @@ MVP raw API access is GET-only.
 
 ## License
 
-`@lukeguo12210/canvas-cli` is source-available under the Business Source License 1.1.
+`canvas-cli` is source-available under the Business Source License 1.1.
 
 Personal, educational, research, academic, non-commercial, and internal evaluation use is permitted. Commercial hosted services, managed services, paid integrations, or competing product offerings require a separate commercial license until the Change Date.
 
