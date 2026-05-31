@@ -8,10 +8,6 @@ Connect Canvas courses to AI agents.
 
 [Install](#installation--quick-start) · [Agent Skills](#agent-skills) · [Auth](#authentication) · [Commands](#command-system) · [Security](#security--privacy) · [License](#license) · [Roadmap](#roadmap)
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=lukeguo12210/canvas-cli&type=Date)](https://www.star-history.com/#lukeguo12210/canvas-cli&Date)
-
 ## Why @lukeguo12210/canvas-cli?
 
 - **Built for technical students** — bring Canvas into your terminal, scripts, and AI workflow.
@@ -267,3 +263,7 @@ npm run build
 - [Engineering PRD](docs/engineering-prd.md)
 - [Executable Build Steps](docs/build-steps.md)
 - [Read-Only-First Plan](docs/read-only-first.md)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=lukeguo12210/canvas-cli&type=Date)](https://www.star-history.com/#lukeguo12210/canvas-cli&Date)
