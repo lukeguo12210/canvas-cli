@@ -7,3 +7,16 @@ npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.env.*
+!.env.example
+.next/
+.vercel/
+*.tsbuildinfo
+playwright-report/
+test-results/
+.local/
+
+supabase/.temp/
+
+artifacts/
