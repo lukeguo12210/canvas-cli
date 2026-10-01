@@ -1,0 +1,28 @@
+name: Canvas Companion quality
+on:
+  push:
+    branches: [main, feat/chatgpt-companion]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/web/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm ci --prefix apps/web --ignore-scripts
+      - run: node --test scripts/cloud-guard.test.mjs
+      - run: npm test && npm run typecheck && npm run build
+      - run: npm test --prefix apps/web && npm run typecheck --prefix apps/web && npm run build --prefix apps/web
+      - run: npm audit --audit-level=high && npm audit --prefix apps/web --audit-level=high
+      - run: git diff --check
+# No automatic deployment. Remote mutations must run cloud-guard.mjs with live
+# identity checks using the personal Loadout account, never ambient work tokens.

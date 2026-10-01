@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-10-01",
+  "loadoutAccountEmail": "lukeguo12210@gmail.com",
+  "vercel": {
+    "integrationId": "composio:vercel_tools",
+    "accountAlias": "Personal",
+    "teamId": "team_tRdTZetEMtiIbrCXFDOq8itX",
+    "teamSlug": "luke-guos-projects",
+    "teamName": "Luke Guo's projects",
+    "projectIds": [
+      "prj_KgkyB8nILDWhIQNmiAqzuwYFaLGH",
+      "prj_HOQWAAM5OY9gqcFS66ORNvw0b0SS"
+    ],
+    "prohibitedTeamIds": [
+      "team_T4pO4xEDqlGcrDBDyLUbNHbk"
+    ],
+    "projects": {
+      "development": {
+        "id": "prj_KgkyB8nILDWhIQNmiAqzuwYFaLGH",
+        "name": "canvas-companion-luke-dev"
+      },
+      "production": {
+        "id": "prj_HOQWAAM5OY9gqcFS66ORNvw0b0SS",
+        "name": "canvas-companion-luke"
+      }
+    }
+  },
+  "supabase": {
+    "integrationId": "composio:supabase_tools",
+    "accountAlias": "Account 1",
+    "organizationId": "picznioxscdeujoelrwv",
+    "organizationName": "Luke's Org",
+    "projectRefs": [
+      "bseipkfggqpoyuilowwe",
+      "awajrlthxfpqbkmtwvvq"
+    ],
+    "prohibitedOrganizationIds": [
+      "ugsvddbslvkdvzihgsoy"
+    ],
+    "projects": {
+      "development": {
+        "ref": "bseipkfggqpoyuilowwe",
+        "name": "canvas-companion-dev"
+      },
+      "production": {
+        "ref": "awajrlthxfpqbkmtwvvq",
+        "name": "canvas-companion-prod"
+      }
+    }
+  }
+}
