@@ -1,0 +1,33 @@
+{
+  "name": "canvas-companion",
+  "version": "0.1.0",
+  "description": "Read your own Canvas courses, assignments and course materials with source links.",
+  "author": {
+    "name": "Luke Guo",
+    "email": "lukeguo12210@gmail.com"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Canvas Companion",
+    "shortDescription": "Your Canvas coursework, with original sources.",
+    "longDescription": "Private read-only Canvas companion. Connect your own account on the companion website, then read courses, due dates, modules and pages. School tokens stay on the server.",
+    "developerName": "Luke Guo",
+    "category": "Productivity",
+    "capabilities": [
+      "Read"
+    ],
+    "defaultPrompt": [
+      "Show my courses.",
+      "Find assignments due this week.",
+      "Summarize a course module with sources."
+    ],
+    "brandColor": "#284fb1",
+    "websiteURL": "https://canvas-companion-luke.vercel.app",
+    "privacyPolicyURL": "https://canvas-companion-luke.vercel.app/privacy",
+    "termsOfServiceURL": "https://canvas-companion-luke.vercel.app/terms"
+  },
+  "mcpServers": "./.mcp.json",
+  "homepage": "https://canvas-companion-luke.vercel.app",
+  "repository": "https://github.com/lukeguo12210/canvas-cli",
+  "license": "BUSL-1.1"
+}

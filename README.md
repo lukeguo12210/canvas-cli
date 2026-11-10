@@ -267,3 +267,9 @@ npm run build
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=lukeguo12210/canvas-cli&type=Date)](https://www.star-history.com/#lukeguo12210/canvas-cli&Date)
+
+## Hosted ChatGPT companion (private pilot)
+
+The hosted companion is at [canvas-companion-luke.vercel.app](https://canvas-companion-luke.vercel.app). It adds school lookup, encrypted personal token storage and eight read-only MCP tools while retaining the local CLI. The pilot uses invitation-only email sign-in. ChatGPT OAuth activation and real-user qualification are separate from website deployment.
+
+See [implementation status and setup](docs/implementation-status.md), [the research plan](docs/chatgpt-plugin-plan.md), and [the plugin package](plugins/canvas-companion). Cloud operations must use the personal-account guard in `scripts/cloud-guard.mjs`.

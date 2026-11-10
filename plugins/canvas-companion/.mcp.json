@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "canvas-companion": {
+      "type": "http",
+      "url": "https://canvas-companion-luke.vercel.app/mcp"
+    }
+  }
+}
